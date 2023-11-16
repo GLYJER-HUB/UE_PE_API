@@ -75,6 +75,7 @@ The backend is developed using Node.js with Express as the framework. Additional
 - Clone the repository.
 - Navigate to the project directory.
 - Run `npm install` to install dependencies.
+- Run `npm start` for a dev server.
 
 ### 3.3 Configuration
 
