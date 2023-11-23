@@ -2,6 +2,7 @@ const express = require('express');
 const cors = require('cors');
 require('dotenv/config');
 const authRoutes = require('./routes/authRoutes');
+const userRoutes = require('./routes/userRoutes');
 const cookieParser = require('cookie-parser');
 const mongoose = require('mongoose');
 
@@ -21,17 +22,19 @@ const connectDB = async () => {
 }
 
 
-// Add middlewares
+// Middlewares
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cors());
 app.use(cookieParser());
 
 
-// Add routes middlewares
+// Routes
 app.use('/api/auth', authRoutes);
+app.use('/api/users', userRoutes);
 
 
+// Launch the server
 connectDB().then(() => {
     app.listen(PORT, () => {
         console.log(`It's alive on http://localhost:${PORT}`)
