@@ -12,6 +12,7 @@ app.use(cors());
 // Add routes middlewares
 
 
+
 // launch the server
 port = process.env.PORT || 3000;
 app.listen(
