@@ -163,8 +163,8 @@ router.delete('/:id', verifyToken, async (req, res) => {
     }
 
     try {
-        await userModel.deleteOne(id);
-        res.status(200).send({ message: 'User updated successfully' });
+        await userModel.deleteOne({ _id: id });
+        res.status(200).send({ message: 'User deleted successfully' });
     } catch (error) {
         console.error('Error getting the user:', error);
         res.status(500).json({ error: 'Internal server error' });
