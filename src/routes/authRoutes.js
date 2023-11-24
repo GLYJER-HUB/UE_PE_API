@@ -8,7 +8,7 @@ require('dotenv/config');
 // Create login endpoint
 router.post('/login', async (req, res) => {
     // Retrieve data from the request
-    const { userName, password } = req.body;
+    const { username, password } = req.body;
 
     try {
         // Check if data is valid
@@ -16,8 +16,8 @@ router.post('/login', async (req, res) => {
         if (error) return res.status(400).json({ message: error.details[0].message });
 
         // Check if the user exists
-        const user = await userModel.findOne({ username: userName });
-        if (!user) return res.status(401).json({ message: "Infvalid username or password" });
+        const user = await userModel.findOne({ username: username });
+        if (!user) return res.status(401).json({ message: "Invalid username or password" });
 
         // Compare the provided password with the stored hashed password
         const passwordMatch = bcrypt.compareSync(password, user.password);
@@ -31,7 +31,7 @@ router.post('/login', async (req, res) => {
         }, process.env.JWT_SECRET);
 
         // Assign the token to a cookie named 'token'
-        res.cookie('token', jwtToken, { httpOnly: true, sameSite: 'None', secure: true });
+        res.cookie('jwtToken', jwtToken, { httpOnly: true, sameSite: 'None', secure: true });
 
         // Send the response
         res.status(200).json({
