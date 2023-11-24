@@ -7,8 +7,8 @@ require('dotenv/config');
 
 // Create login endpoint
 router.post('/login', async (req, res) => {
-    // retrieve data from the request
-    const { userName, password } = req.body;
+    // Retrieve data from the request
+    const { username, password } = req.body;
 
     try {
         // Check if data is valid
@@ -16,7 +16,7 @@ router.post('/login', async (req, res) => {
         if (error) return res.status(400).json({ message: error.details[0].message });
 
         // Check if the user exists
-        const user = await userModel.findOne({ username: userName });
+        const user = await userModel.findOne({ username: username });
         if (!user) return res.status(401).json({ message: "Invalid username or password" });
 
         // Compare the provided password with the stored hashed password
@@ -31,7 +31,7 @@ router.post('/login', async (req, res) => {
         }, process.env.JWT_SECRET);
 
         // Assign the token to a cookie named 'token'
-        res.cookie('token', token, { httpOnly: true, sameSite: 'None', secure: true });
+        res.cookie('jwtToken', jwtToken, { httpOnly: true, sameSite: 'None', secure: true });
 
         // Send the response
         res.status(200).json({
@@ -40,6 +40,7 @@ router.post('/login', async (req, res) => {
             role: user.role
         });
     } catch (error) {
+        console.error('Error login:', error);
         res.status(500).json({ message: 'Internal server error' });
     }
 });
