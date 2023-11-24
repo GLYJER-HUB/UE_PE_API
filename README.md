@@ -72,12 +72,34 @@ The backend is developed using Node.js with Express as the framework. Additional
 
 ### 3.2 Installation
 
-- Clone the repository.
-- Navigate to the project directory.
-- Run `npm install` to install dependencies.
-- Run `npm start` for a dev server.
+- Clone the repository:
+   ```bash
+   git clone https://github.com/jcblanc2/PenX.git
+   ```
+
+- Navigate to the project directory:
+   ```bash
+   cd UE_PE_API
+   ```
+
+- Install server dependencies:
+   ```bash
+   npm install
+   ```
 
 ### 3.3 Configuration
 
-- Configure the database connection in the backend.
-- Set up environment variables for sensitive information.
+   - Create a `.env` file in the `UE_PE_API` directory and set the following variables:
+
+     ```env
+     PORT=3000
+     MONGODB_URI=...
+     JWT_SECRET=your-secret-key
+     ```
+
+### 3.4 Usage
+
+- Start the server:
+   ```bash
+   npm run dev
+   ```
