@@ -9,6 +9,6 @@ const {
 router.post('/', verifyToken, addLogController);
 
 // Endpoint to update a log
-router.put('/', verifyToken, updateLogController);
+router.put('/:id', verifyToken, updateLogController);
 
 module.exports = router;

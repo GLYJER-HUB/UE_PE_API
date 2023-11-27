@@ -1,8 +1,11 @@
+require('dotenv/config');
 const userModel = require('../models/userModel');
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken');
 const { loginValidation } = require('../utils/validation');
-require('dotenv/config');
+const {
+    addLogController,
+    updateLogController } = require('../controllers/userLogController');
 
 // Create login Controller
 async function loginController(req, res) {
@@ -15,18 +18,26 @@ async function loginController(req, res) {
         if (error) return res.status(400).json({ message: error.details[0].message });
 
         // Check if the user exists
-        const user = await userModel.findOne({ username: username });
+        const user = await userModel.findOne({
+            username: username,
+            deleted: false
+        });
         if (!user) return res.status(401).json({ message: "Invalid username or password" });
 
         // Compare the provided password with the stored hashed password
         const passwordMatch = bcrypt.compareSync(password, user.password);
         if (!passwordMatch) return res.status(401).json({ message: "Invalid username or password" });
 
+        // Log the user login
+        const loginTime = new Date();
+        const logId = await addLogController(user._id, loginTime, null);
+
         // Create a JWT token
         const jwtToken = jwt.sign({
             userName: user.username,
             userId: user._id,
-            role: user.role
+            role: user.role,
+            logId: logId
         }, process.env.JWT_SECRET, { expiresIn: '24h' });
 
         // Assign the token to a cookie named 'token'
@@ -47,6 +58,8 @@ async function loginController(req, res) {
 
 // Create logout Controller
 async function logoutController(req, res) {
+    const {logId}  = req.user;
+
     try {
         const { jwtToken } = req.cookies;
 
@@ -54,6 +67,10 @@ async function logoutController(req, res) {
         if (!jwtToken) {
             return res.status(401).json({ message: 'Access denied: No token provided' });
         }
+
+        // Update log
+        const logoutTime = new Date();
+        await updateLogController(logId, logoutTime);
 
         res.clearCookie('jwtToken');
         res.status(205);

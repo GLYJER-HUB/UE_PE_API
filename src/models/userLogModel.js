@@ -3,7 +3,8 @@ const mongoose = require('mongoose');
 // Create the user schema
 const userLogSchema = new mongoose.Schema({
     user_id: {
-        type: mongoose.Schema.Types.ObjectId, ref: "User"
+        type: mongoose.Schema.Types.ObjectId, ref: "User",
+        require: true
     },
 
     last_login: {
