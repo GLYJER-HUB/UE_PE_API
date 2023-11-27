@@ -27,7 +27,7 @@ async function loginController(req, res) {
             userName: user.username,
             userId: user._id,
             role: user.role
-        }, process.env.JWT_SECRET);
+        }, process.env.JWT_SECRET, { expiresIn: '24h' });
 
         // Assign the token to a cookie named 'token'
         res.cookie('jwtToken', jwtToken, { httpOnly: true, sameSite: 'None', secure: true });
@@ -56,7 +56,7 @@ async function logoutController(req, res) {
         }
 
         res.clearCookie('jwtToken');
-
+        res.status(205);
         res.json({ message: 'Logout successful' });
     } catch (error) {
         console.error('Error logout:', error);

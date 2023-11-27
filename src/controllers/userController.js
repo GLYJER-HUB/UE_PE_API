@@ -1,4 +1,3 @@
-const router = require('express').Router();
 const userModel = require('../models/userModel');
 const { addUserValidation, updateUserValidation } = require('../utils/validation');
 const bcrypt = require('bcryptjs');

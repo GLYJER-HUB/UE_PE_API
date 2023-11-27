@@ -35,8 +35,8 @@ app.use('/api/users', userRoutes);
 
 
 // Launch the server
-connectDB().then(() => {
+// connectDB().then(() => {
     app.listen(PORT, () => {
         console.log(`It's alive on http://localhost:${PORT}`)
     })
-})
+// })
