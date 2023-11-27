@@ -1,17 +1,14 @@
-const userModel = require('../models/userModel');
-const { addUserValidation, updateUserValidation } = require('../utils/validation');
-const bcrypt = require('bcryptjs');
+const userLogModel = require('../models/userLogModel');
 require('dotenv/config');
 
-
 // Controller to add a new user
-async function addUserController(req, res) {
+async function addLogController(req, res) {
     // Retrieve data from the request
     const { username, password, role } = req.body;
     const addedBy = req.user ? req.user.userId : null;
 
     // Check the user role
-    if (!req.user || req.user.role !== 'admin') {
+    if (!req.user || (req.user.role !== 'admin' && req.user.role !== 'member')) {
         return res.status(403).json({ message: 'Access denied!' });
     }
 
@@ -48,58 +45,8 @@ async function addUserController(req, res) {
 }
 
 
-// Controller to get a list of users
-async function getUsersController(req, res) {
-    try {
-        // Check the user role
-        if (!req.user || (req.user.role !== 'admin' && req.user.role !== 'member')) {
-            return res.status(403).json({ message: 'Access denied!' });
-        }
-
-        // Retrieve all users from the database
-        const allUsers = await userModel
-            .find({ deleted: false }, '-password')
-            .populate([
-                { path: 'added_by', select: 'username' },
-                { path: 'modified_by', select: 'username' }
-            ]);
-
-        res.status(200).send({ users: allUsers });
-    } catch (error) {
-        console.error('Error getting all users:', error);
-        res.status(500).json({ error: 'Internal server error' });
-    }
-}
-
-
-// Controller to get a user by _id
-async function getUserController(req, res) {
-    // Retrieve the id from the request params
-    const { id } = req.params;
-
-    // Check the user role
-    if (!req.user || req.user.role !== 'admin') {
-        return res.status(403).json({ message: 'Access denied!' });
-    }
-
-    try {
-        const user = await userModel
-            .findById({ _id: id, deleted: false })
-            .populate([
-                { path: 'added_by', select: 'username' },
-                { path: 'modified_by', select: 'username' }
-            ]);
-
-        res.status(200).send(user);
-    } catch (error) {
-        console.error('Error getting the user:', error);
-        res.status(500).json({ error: 'Internal server error' });
-    }
-}
-
-
 // Controller to update a user
-async function updateUserController(req, res) {
+async function updateLogController(req, res) {
     // Retrieve data from the request
     const { username, password, role } = req.body;
     const addedBy = req.user.userId;
@@ -150,31 +97,4 @@ async function updateUserController(req, res) {
     }
 }
 
-
-// Controller to delete a user
-async function deleteUserController(req, res) {
-    // Retrieve the id from the request params
-    const { id } = req.params;
-
-    // Check the user role
-    if (!req.user || req.user.role !== 'admin') {
-        return res.status(403).json({ message: 'Access denied!' });
-    }
-
-    try {
-        await userModel.findByIdAndUpdate(id, { deleted: true });
-        res.status(200).send({ message: 'User deleted successfully' });
-    } catch (error) {
-        console.error('Error getting the user:', error);
-        res.status(500).json({ error: 'Internal server error' });
-    }
-}
-
-
-module.exports = {
-    addUserController,
-    getUsersController,
-    getUserController,
-    updateUserController,
-    deleteUserController
-};
+module.exports = { addLogController, updateLogController };
