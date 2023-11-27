@@ -5,7 +5,7 @@ require('dotenv/config');
 const verifyToken = (req, res, next) => {
     // Retrieve the token from the cookie
     const { jwtToken } = req.cookies;
-    
+
     // Check is the token is empty
     if (!jwtToken) return res.status(401).json({ message: 'Access denied: No token provided' });
 

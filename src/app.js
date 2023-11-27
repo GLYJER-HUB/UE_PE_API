@@ -1,8 +1,9 @@
+require('dotenv/config');
 const express = require('express');
 const cors = require('cors');
-require('dotenv/config');
 const authRoutes = require('./routes/authRoutes');
 const userRoutes = require('./routes/userRoutes');
+const userLogRoutes = require('./routes/userLogRoutes');
 const cookieParser = require('cookie-parser');
 const mongoose = require('mongoose');
 
@@ -32,6 +33,7 @@ app.use(cors({ credentials: true, origin: "http://localhost:3000" }));
 // Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
+app.use('/api/logs', userLogRoutes);
 
 
 // Launch the server

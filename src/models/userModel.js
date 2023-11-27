@@ -24,6 +24,11 @@ const userSchema = new mongoose.Schema({
         max: 20
     },
 
+    deleted: {
+        type: Boolean,
+        default: false
+    },
+
     added_by: {
         type: mongoose.Schema.Types.ObjectId, ref: "User"
     },

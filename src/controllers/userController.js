@@ -1,4 +1,3 @@
-const router = require('express').Router();
 const userModel = require('../models/userModel');
 const { addUserValidation, updateUserValidation } = require('../utils/validation');
 const bcrypt = require('bcryptjs');
@@ -12,7 +11,7 @@ async function addUserController(req, res) {
     const addedBy = req.user ? req.user.userId : null;
 
     // Check the user role
-    if (!req.user || (req.user.role !== 'admin' && req.user.role !== 'member')) {
+    if (!req.user || req.user.role !== 'admin') {
         return res.status(403).json({ message: 'Access denied!' });
     }
 
@@ -59,7 +58,7 @@ async function getUsersController(req, res) {
 
         // Retrieve all users from the database
         const allUsers = await userModel
-            .find({}, '-password')
+            .find({ deleted: false }, '-password')
             .populate([
                 { path: 'added_by', select: 'username' },
                 { path: 'modified_by', select: 'username' }
@@ -85,7 +84,7 @@ async function getUserController(req, res) {
 
     try {
         const user = await userModel
-            .findById(id)
+            .findById({ _id: id, deleted: false })
             .populate([
                 { path: 'added_by', select: 'username' },
                 { path: 'modified_by', select: 'username' }
@@ -163,7 +162,7 @@ async function deleteUserController(req, res) {
     }
 
     try {
-        await userModel.deleteOne({ _id: id });
+        await userModel.findByIdAndUpdate(id, { deleted: true });
         res.status(200).send({ message: 'User deleted successfully' });
     } catch (error) {
         console.error('Error getting the user:', error);

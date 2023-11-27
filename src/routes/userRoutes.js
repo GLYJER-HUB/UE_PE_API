@@ -24,7 +24,7 @@ router.put('/:id', verifyToken, updateUserController);
 
 
 // Endpoint to delete a user
-router.delete('/:id', verifyToken, deleteUserController);
+router.put('/delete/:id', verifyToken, deleteUserController);
 
 
 module.exports = router;
