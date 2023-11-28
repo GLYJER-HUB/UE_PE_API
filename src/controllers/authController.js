@@ -2,7 +2,7 @@ require('dotenv/config');
 const userModel = require('../models/userModel');
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken');
-const { loginValidation } = require('../utils/validation');
+const { loginValidation } = require('../utils/userValidation');
 const {
     addLogController,
     updateLogController } = require('../controllers/userLogController');

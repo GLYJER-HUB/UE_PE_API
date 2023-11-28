@@ -4,6 +4,7 @@ const cors = require('cors');
 const authRoutes = require('./routes/authRoutes');
 const userRoutes = require('./routes/userRoutes');
 const userLogRoutes = require('./routes/userLogRoutes');
+const projectRoutes = require('./routes/projectRoutes');
 const cookieParser = require('cookie-parser');
 const mongoose = require('mongoose');
 
@@ -31,6 +32,7 @@ app.use(cors({ credentials: true, origin: "http://localhost:3000" }));
 app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/logs', userLogRoutes);
+app.use('/api/projects', projectRoutes);
 
 // Launch the server
 connectDB().then(() => {

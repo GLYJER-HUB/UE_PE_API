@@ -1,5 +1,8 @@
 const userModel = require('../models/userModel');
-const { addUserValidation, updateUserValidation } = require('../utils/validation');
+const {
+    addUserValidation,
+    updateUserValidation
+} = require('../utils/userValidation');
 const bcrypt = require('bcryptjs');
 require('dotenv/config');
 
