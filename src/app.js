@@ -10,7 +10,6 @@ const mongoose = require('mongoose');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-
 // Connect to the database
 const connectDB = async () => {
     try {
@@ -22,19 +21,16 @@ const connectDB = async () => {
     }
 }
 
-
 // Middlewares
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(cors({ credentials: true, origin: "http://localhost:3000" }));
 
-
 // Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/logs', userLogRoutes);
-
 
 // Launch the server
 connectDB().then(() => {
