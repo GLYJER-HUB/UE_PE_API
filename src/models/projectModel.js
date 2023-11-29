@@ -1,5 +1,17 @@
 const mongoose = require('mongoose');
 
+// Define discipline and type enums
+const disciplineEnum = ['Informatique', 'Comptabilité', 'Gestion', 'Éducation'];
+const typeEnum = [
+    'App mobile',
+    'Web application',
+    'Desktop application',
+    'Plan d\'affaire',
+    'Système comptable',
+    'Rédaction de projet',
+    'Mémoire'
+];
+
 // Create the project schema
 const projectSchema = new mongoose.Schema({
     project_name: {
@@ -18,21 +30,16 @@ const projectSchema = new mongoose.Schema({
     discipline: {
         type: String,
         required: true,
-        max: 50
+        enum: disciplineEnum
     },
 
     type: {
         type: String,
         required: true,
-        min: 5,
-        max: 50
+        enum: typeEnum
     },
 
     cover: {
-        type: String,
-    },
-
-    project_url: {
         type: String,
     },
 
@@ -40,8 +47,17 @@ const projectSchema = new mongoose.Schema({
         type: String
     },
 
+    project_url: {
+        type: String,
+    },
+
     authors: {
         type: [String],
+        required: true,
+    },
+
+    year_of_submission: {
+        type: Number,
         required: true,
     },
 

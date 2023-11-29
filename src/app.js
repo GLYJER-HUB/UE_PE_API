@@ -27,6 +27,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(cors({ credentials: true, origin: "http://localhost:3000" }));
+app.use('/uploads', express.static(__dirname + '/uploads'));
 
 // Routes
 app.use('/api/auth', authRoutes);

@@ -38,7 +38,7 @@ async function loginController(req, res) {
             userId: user._id,
             role: user.role,
             logId: logId
-        }, process.env.JWT_SECRET, { expiresIn: '24h' });
+        }, process.env.JWT_SECRET, { expiresIn: '12h' });
 
         // Assign the token to a cookie named 'token'
         res.cookie('jwtToken', jwtToken, { httpOnly: true, sameSite: 'None', secure: true });
