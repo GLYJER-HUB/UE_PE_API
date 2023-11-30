@@ -15,12 +15,12 @@ The project uses MongoDB due to its stability and compatibility with project req
 #### 1.2.1 Tables
 
 - **Users:**
-  - user_id (GUID, Primary Key)
-  - username (VARCHAR, User's username)
-  - password (VARCHAR, Hashed password using secure hashing techniques)
-  - role (VARCHAR)
-  - created_at (Date)
-  - updated_at (Date)
+  - `user_id` (GUID, Primary Key)
+  - `username` (VARCHAR, User's username)
+  - `password` (VARCHAR, Hashed password using secure hashing techniques)
+  - `role` (VARCHAR)
+  - `created_at` (Date)
+  - `updated_at` (Date)
     
 - **UserLog:**
   - `user_id` (GUID, Primary Key): Unique identifier for the user.
