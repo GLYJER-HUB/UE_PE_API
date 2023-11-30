@@ -12,6 +12,9 @@ const {
 } = require('../controllers/projectController');
 const multer = require('multer')
 const path = require('path');
+const apicache = require('apicache');
+
+let cache = apicache.middleware;
 
 // Setup the location to save the files
 const storage = multer.diskStorage({
@@ -69,13 +72,22 @@ router.post(
 );
 
 // Endpoint to get all projects
-router.get('/', getProjectsController);
+router.get(
+    '/',
+    cache('1 minutes'),
+    getProjectsController);
 
 // Endpoint to get projects by discipline
-router.get('/discipline/:discipline', getProjectsByDisciplineController);
+router.get(
+    '/discipline/:discipline',
+    cache('1 minutes'),
+    getProjectsByDisciplineController);
 
 // Endpoint to get projects by type
-router.get('/type/:type', getProjectsByTypeController);
+router.get(
+    '/type/:type',
+    cache('1 minutes'),
+    getProjectsByTypeController);
 
 // Endpoint to get projects by discipline and type
 router.get(
