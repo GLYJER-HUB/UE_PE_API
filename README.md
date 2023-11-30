@@ -60,25 +60,25 @@ The backend is developed using Node.js with Express as the framework. Additional
 
 - `POST` /: Endpoint to add a new user.
 - `GET` /: Endpoint to get a list of users.
-- `GET` /:id: Endpoint to get a user by _id.
-- `PUT` /:id: Endpoint to update a user.
-- `PUT` /delete/:id: Endpoint to delete a user.
+- `GET` /:id:: Endpoint to get a user by _id.
+- `PUT` /:id:: Endpoint to update a user.
+- `PUT` /delete/:id:: Endpoint to delete a user.
   
 #### 2.2.3 `/api/logs`
 
 - `POST` /: Endpoint to add a log.
-- `PUT` /:id: Endpoint to update a log.
+- `PUT` /:id:: Endpoint to update a log.
 
 #### 2.2.4 `/api/projects`
 
 - `POST` /: Endpoint to add a new project.
 - `GET` /: Endpoint to get all projects (cached for 1 minute).
-- `GET` /discipline/:discipline: Endpoint to get projects by discipline (cached for 1 minute).
-- `GET` /type/:type: Endpoint to get projects by type (cached for 1 minute).
-- `GET` /discipline/:discipline/type/:type: Endpoint to get projects by discipline and type.
-- `GET` /id/:id: Endpoint to get a project by _id.
-- `PUT` /:id: Endpoint to update a project.
-- `PUT` /delete/:id: Endpoint to delete a project.
+- `GET` /discipline/:discipline:: Endpoint to get projects by discipline (cached for 1 minute).
+- `GET` /type/:type:: Endpoint to get projects by type (cached for 1 minute).
+- `GET` /discipline/:discipline/type/:type:: Endpoint to get projects by discipline and type.
+- `GET` /id/:id:: Endpoint to get a project by _id.
+- `PUT` /:id:: Endpoint to update a project.
+- `PUT` /delete/:id:: Endpoint to delete a project.
 
 ## 3. Getting Started
 
