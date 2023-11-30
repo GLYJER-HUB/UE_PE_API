@@ -18,52 +18,67 @@ The project uses MongoDB due to its stability and compatibility with project req
   - user_id (GUID, Primary Key)
   - username (VARCHAR, User's username)
   - password (VARCHAR, Hashed password using secure hashing techniques)
+  - role (VARCHAR)
   - created_at (Date)
   - updated_at (Date)
+    
+- **UserLog:**
+  - `user_id` (GUID, Primary Key): Unique identifier for the user.
+  - `last_login` (Date): Timestamp indicating the user's last login.
+  - `last_logout` (Date): Timestamp indicating the user's last logout.
 
 - **Projects:**
-  - project_id (GUID, Primary Key)
-  - project_name (VARCHAR, Project name)
-  - description (TEXT, Detailed project description)
-  - cover (VARCHAR, L'image du projet)
-  - discipline (VARCHAR, Academic discipline)
-  - type (VARCHAR, Project type)
-  - author (Author of the project)
-  - project_url (VARCHAR, Lien du projet ex: un lien github)
-  - deleted (BOOLEAN, Indicates if the project has been deleted)
-  - added_by (GUID, Foreign Key referencing Users.user_id, indicates the user who added the project)
-  - last_modified_by (GUID, Foreign Key referencing Users.user_id, indicates the user who last modified the project)
-  - created_at (Date)
-  - updated_at (Date)
+  - `project_id` (GUID, Primary Key): Unique identifier for the project.
+  - `project_name` (VARCHAR): Name of the project.
+  - `description` (TEXT): Detailed description of the project.
+  - `cover` (VARCHAR): Image file path for the project.
+  - `pdf` (VARCHAR): PDF file path for the project.
+  - `discipline` (VARCHAR): Academic discipline associated with the project.
+  - `type` (VARCHAR): Type of the project.
+  - `authors` (VARCHAR): Authors of the project.
+  - `project_url` (VARCHAR): URL link to the project (e.g., a GitHub link).
+  - `deleted` (BOOLEAN): Indicates whether the project has been deleted (true or false).
+  - `added_by` (GUID, Foreign Key referencing Users.user_id): Identifies the user who added the project.
+  - `last_modified_by` (GUID, Foreign Key referencing Users.user_id): Identifies the user who last modified the project.
+  - `created_at` (Date): Timestamp indicating when the project was created.
+  - `updated_at` (Date): Timestamp indicating when the project was last updated.
 
 ## 2. Backend Specifications
 
 ### 2.1 Technical Environment
 
-The backend is developed using Node.js with Express as the framework. Additional modules include Knex for database access, JWT for authentication, Bcryptjs for password hashing, and Joi for data validation.
+The backend is developed using Node.js with Express as the framework. Additional modules include JWT for authentication, Bcryptjs for password hashing, and Joi for data validation.
 
 ### 2.2 API Endpoints
 
-#### 2.2.1 `/api/projects`
+#### 2.2.1 `/api/auth`
 
-- `GET`: Retrieve the list of projects based on filters (discipline, type, author, etc.).
-- `POST`: Add a new project to the database.
+- `POST` /login: Endpoint to authenticate a user and generate a token.
+- `POST` /logout: Endpoint to log out a user.
 
-#### 2.2.2 `/api/projects/:projectId`
+#### 2.2.2 `/api/users`
 
-- `GET`: Retrieve details of a specific project.
-- `PUT`: Update details of an existing project.
-- `DELETE`: Mark a project as deleted.
+- `POST` /: Endpoint to add a new user.
+- `GET` /: Endpoint to get a list of users.
+- `GET` /:id: Endpoint to get a user by _id.
+- `PUT` /:id: Endpoint to update a user.
+- `PUT` /delete/:id: Endpoint to delete a user.
+  
+#### 2.2.3 `/api/logs`
 
-#### 2.2.3 `/api/users`
+- `POST` /: Endpoint to add a log.
+- `PUT` /:id: Endpoint to update a log.
 
-- `POST`: Create a new user.
-- `PUT`: Update user information.
-- `DELETE`: Delete a user (for administrators only).
+#### 2.2.4 `/api/projects`
 
-#### 2.2.4 `/api/auth`
-
-- `POST`: Authenticate a user and generate a JWT token.
+- `POST` /: Endpoint to add a new project.
+- `GET` /: Endpoint to get all projects (cached for 1 minute).
+- `GET` /discipline/:discipline: Endpoint to get projects by discipline (cached for 1 minute).
+- `GET` /type/:type: Endpoint to get projects by type (cached for 1 minute).
+- `GET` /discipline/:discipline/type/:type: Endpoint to get projects by discipline and type.
+- `GET` /id/:id: Endpoint to get a project by _id.
+- `PUT` /:id: Endpoint to update a project.
+- `PUT` /delete/:id: Endpoint to delete a project.
 
 ## 3. Getting Started
 
