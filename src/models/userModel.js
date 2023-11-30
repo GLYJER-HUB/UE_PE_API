@@ -1,5 +1,7 @@
 const mongoose = require('mongoose');
 
+const roleEnum = ['admin', 'member'];
+
 // Create the user schema
 const userSchema = new mongoose.Schema({
     username: {
@@ -20,8 +22,7 @@ const userSchema = new mongoose.Schema({
     role: {
         type: String,
         required: true,
-        min: 4,
-        max: 20
+        enum: roleEnum
     },
 
     deleted: {

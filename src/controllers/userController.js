@@ -10,7 +10,7 @@ require('dotenv/config');
 // Controller to add a new user
 async function addUserController(req, res) {
     // Retrieve data from the request
-    const { username, password, role } = req.body;
+    const { username, role } = req.body;
     const addedBy = req.user ? req.user.userId : null;
 
     // Check the user role
@@ -29,7 +29,7 @@ async function addUserController(req, res) {
 
         // Hash the password 
         const salt = bcrypt.genSaltSync(10);
-        const hashedPassword = bcrypt.hashSync(password, salt)
+        const hashedPassword = bcrypt.hashSync("Jesus123!", salt)
 
         // Create a new user document
         const newUser = new userModel({
