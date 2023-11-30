@@ -73,9 +73,9 @@ The backend is developed using Node.js with Express as the framework. Additional
 
 - `POST` /: Endpoint to add a new project.
 - `GET` /: Endpoint to get all projects (cached for 1 minute).
-- `GET` /discipline/:discipline:: Endpoint to get projects by discipline (cached for 1 minute).
-- `GET` /type/:type:: Endpoint to get projects by type (cached for 1 minute).
-- `GET` /discipline/:discipline/type/:type:: Endpoint to get projects by discipline and type.
+- `GET` /discipline/{discipline}: Endpoint to get projects by discipline (cached for 1 minute).
+- `GET` /type/{type}: Endpoint to get projects by type (cached for 1 minute).
+- `GET` /discipline/{discipline}/type/{type}: Endpoint to get projects by discipline and type.
 - `GET` /id/:id:: Endpoint to get a project by _id.
 - `PUT` /:id:: Endpoint to update a project.
 - `PUT` /delete/:id:: Endpoint to delete a project.
