@@ -2,6 +2,13 @@ const router = require('express').Router();
 const verifyToken = require('../utils/jwtVerification');
 const {
     addProjectController,
+    getProjectsController,
+    getProjectsByDisciplineController,
+    getProjectsByTypeController,
+    getProjectByIdController,
+    getProjectsByDisciplineTypeController,
+    updateProjectController,
+    deleteProjectController
 } = require('../controllers/projectController');
 const multer = require('multer')
 const path = require('path');
@@ -60,5 +67,29 @@ router.post(
     upload,
     addProjectController
 );
+
+// Endpoint to get all projects
+router.get('/', getProjectsController);
+
+// Endpoint to get projects by discipline
+router.get('/discipline/:discipline', getProjectsByDisciplineController);
+
+// Endpoint to get projects by type
+router.get('/type/:type', getProjectsByTypeController);
+
+// Endpoint to get projects by discipline and type
+router.get(
+    '/discipline/:discipline/type/:type',
+    getProjectsByDisciplineTypeController
+);
+
+// Endpoint to get a project by _id
+router.get('/id/:id', getProjectByIdController);
+
+// Endpoint to update a project
+router.put('/:id', verifyToken, upload, updateProjectController);
+
+// Endpoint to delete a project
+router.put('/delete/:id', verifyToken, deleteProjectController);
 
 module.exports = router;
