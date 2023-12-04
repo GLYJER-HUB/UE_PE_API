@@ -91,7 +91,7 @@ The backend is developed using Node.js with Express as the framework. Additional
 
 - Clone the repository:
    ```bash
-   git clone https://github.com/jcblanc2/PenX.git
+   git clone https://github.com/UEspoir-PE/UE_PE_API.git
    ```
 
 - Navigate to the project directory:
