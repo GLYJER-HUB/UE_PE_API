@@ -1,9 +1,8 @@
-const projectModel = require('../models/projectModel');
+const projectModel = require("../models/projectModel");
 const {
     addProjectValidation,
-    updateProjectValidation
-} = require('../utils/projectValidation');
-
+    updateProjectValidation,
+} = require("../utils/projectValidation");
 
 // Controller to add a new project
 async function addProjectController(req, res) {
@@ -29,20 +28,21 @@ async function addProjectController(req, res) {
         type,
         projectUrl,
         authors,
-        yearOfSubmission
+        yearOfSubmission,
     } = req.body;
 
     const addedBy = req.user ? req.user.userId : null;
 
     // Check the user role
-    if (!req.user || (req.user.role !== 'admin' && req.user.role !== 'member')) {
-        return res.status(403).json({ message: 'Access denied!' });
+    if (!req.user || (req.user.role !== "admin" && req.user.role !== "member")) {
+        return res.status(403).json({ message: "Access denied!" });
     }
 
     try {
         // Check if data is valid
         const { error } = addProjectValidation(req.body);
-        if (error) return res.status(400).json({ message: error.details[0].message });
+        if (error)
+            return res.status(400).json({ message: error.details[0].message });
 
         // Create a new project document
         const newProject = new projectModel({
@@ -56,42 +56,37 @@ async function addProjectController(req, res) {
             authors: authors,
             year_of_submission: yearOfSubmission,
             added_by: addedBy,
-            last_modified_by: addedBy
+            last_modified_by: addedBy,
         });
 
         // Save the document to the database
         await newProject.save();
 
         res.status(201).json({
-            message: 'Project created successfully',
-            project: newProject
+            message: "Project created successfully",
+            project: newProject,
         });
-
     } catch (error) {
-        console.error('Error creating project:', error);
-        res.status(500).json({ error: 'Internal server error' });
+        console.error("Error creating project:", error);
+        res.status(500).json({ error: "Internal server error" });
     }
 }
-
 
 // Controller to get all projects
 async function getProjectsController(req, res) {
     try {
         // Retrieve all projects from the database
-        const allProjects = await projectModel
-            .find({ deleted: false })
-            .populate([
-                { path: 'added_by', select: 'username' },
-                { path: 'last_modified_by', select: 'username' }
-            ]);
+        const allProjects = await projectModel.find({ deleted: false }).populate([
+            { path: "added_by", select: "username" },
+            { path: "last_modified_by", select: "username" },
+        ]);
 
         res.status(200).send({ projects: allProjects });
     } catch (error) {
-        console.error('Error getting all projects:', error);
-        res.status(500).json({ error: 'Internal server error' });
+        console.error("Error getting all projects:", error);
+        res.status(500).json({ error: "Internal server error" });
     }
 }
-
 
 // Controller to get projects by discipline
 async function getProjectsByDisciplineController(req, res) {
@@ -101,17 +96,16 @@ async function getProjectsByDisciplineController(req, res) {
         const allProjects = await projectModel
             .find({ discipline: discipline }, { deleted: false })
             .populate([
-                { path: 'added_by', select: 'username' },
-                { path: 'last_modified_by', select: 'username' }
+                { path: "added_by", select: "username" },
+                { path: "last_modified_by", select: "username" },
             ]);
 
         res.status(200).send({ projects: allProjects });
     } catch (error) {
-        console.error('Error getting all projects:', error);
-        res.status(500).json({ error: 'Internal server error' });
+        console.error("Error getting all projects:", error);
+        res.status(500).json({ error: "Internal server error" });
     }
 }
-
 
 // Controller to get projects by type
 async function getProjectsByTypeController(req, res) {
@@ -121,17 +115,16 @@ async function getProjectsByTypeController(req, res) {
         const allProjects = await projectModel
             .find({ type: type }, { deleted: false })
             .populate([
-                { path: 'added_by', select: 'username' },
-                { path: 'last_modified_by', select: 'username' }
+                { path: "added_by", select: "username" },
+                { path: "last_modified_by", select: "username" },
             ]);
 
         res.status(200).send({ projects: allProjects });
     } catch (error) {
-        console.error('Error getting all projects:', error);
-        res.status(500).json({ error: 'Internal server error' });
+        console.error("Error getting all projects:", error);
+        res.status(500).json({ error: "Internal server error" });
     }
 }
-
 
 // Controller to get projects by type and discipline
 async function getProjectsByDisciplineTypeController(req, res) {
@@ -141,14 +134,39 @@ async function getProjectsByDisciplineTypeController(req, res) {
         const allProjects = await projectModel
             .find({ discipline: discipline, type: type, deleted: false })
             .populate([
-                { path: 'added_by', select: 'username' },
-                { path: 'last_modified_by', select: 'username' }
+                { path: "added_by", select: "username" },
+                { path: "last_modified_by", select: "username" },
             ]);
 
         res.status(200).send({ projects: allProjects });
     } catch (error) {
-        console.error('Error getting all projects:', error);
-        res.status(500).json({ error: 'Internal server error' });
+        console.error("Error getting all projects:", error);
+        res.status(500).json({ error: "Internal server error" });
+    }
+}
+
+// Controller to search projects by name or authors
+async function searchProjectsController(req, res) {
+    const { query } = req.query;
+    try {
+        // Search for projects by name or authors
+        const searchResults = await projectModel
+            .find({
+                $or: [
+                    { project_name: { $regex: query, $options: 'i' } },
+                    { authors: { $regex: query, $options: 'i' } },
+                ],
+                deleted: false
+            })
+            .populate([
+                { path: "added_by", select: "username" },
+                { path: "last_modified_by", select: "username" },
+            ]);
+
+        res.status(200).send({ projects: searchResults });
+    } catch (error) {
+        console.error("Error seaching projects:", error);
+        res.status(500).json({ error: "Internal server error" });
     }
 }
 
@@ -161,18 +179,18 @@ async function getProjectByIdController(req, res) {
         const project = await projectModel
             .findOne({ _id: id, deleted: false })
             .populate([
-                { path: 'added_by', select: 'username' },
-                { path: 'last_modified_by', select: 'username' }
+                { path: "added_by", select: "username" },
+                { path: "last_modified_by", select: "username" },
             ]);
 
         if (!project) {
-            return res.status(404).json({ message: 'Project not found' });
+            return res.status(404).json({ message: "Project not found" });
         }
 
         res.status(200).send(project);
     } catch (error) {
-        console.error('Error getting the project:', error);
-        res.status(500).json({ error: 'Internal server error' });
+        console.error("Error getting the project:", error);
+        res.status(500).json({ error: "Internal server error" });
     }
 }
 
@@ -200,28 +218,29 @@ async function updateProjectController(req, res) {
         type,
         projectUrl,
         authors,
-        yearOfSubmission
+        yearOfSubmission,
     } = req.body;
 
     const addedBy = req.user ? req.user.userId : null;
     const { id } = req.params;
 
     // Check the user role
-    if (!req.user || (req.user.role !== 'admin' && req.user.role !== 'member')) {
-        return res.status(403).json({ message: 'Access denied!' });
+    if (!req.user || (req.user.role !== "admin" && req.user.role !== "member")) {
+        return res.status(403).json({ message: "Access denied!" });
     }
 
     try {
         // Check if data is valid
         const { error } = updateProjectValidation(req.body);
-        if (error) return res.status(400).json({ message: error.details[0].message });
+        if (error)
+            return res.status(400).json({ message: error.details[0].message });
 
         // Find the project to update
         const projectToUpdate = await projectModel.findById(id);
 
         // Check if the project exists
         if (!projectToUpdate) {
-            return res.status(404).json({ message: 'Project not found' });
+            return res.status(404).json({ message: "Project not found" });
         }
 
         // Update the document in the database
@@ -234,22 +253,22 @@ async function updateProjectController(req, res) {
             pdf_file: pdfPath ? pdfPath : projectToUpdate.pdf_file,
             project_url: projectUrl ? projectUrl : projectToUpdate.project_url,
             authors: authors ? authors : projectToUpdate.authors,
-            year_of_submission: yearOfSubmission ? yearOfSubmission : projectToUpdate.year_of_submission,
+            year_of_submission: yearOfSubmission
+                ? yearOfSubmission
+                : projectToUpdate.year_of_submission,
             added_by: addedBy,
-            last_modified_by: addedBy
+            last_modified_by: addedBy,
         });
 
         res.status(200).json({
-            message: 'Project updated successfully',
-            project: projectToUpdate
+            message: "Project updated successfully",
+            project: projectToUpdate,
         });
-
     } catch (error) {
-        console.error('Error updating project:', error);
-        res.status(500).json({ error: 'Internal server error' });
+        console.error("Error updating project:", error);
+        res.status(500).json({ error: "Internal server error" });
     }
 }
-
 
 // Controller to delete a project
 async function deleteProjectController(req, res) {
@@ -257,19 +276,18 @@ async function deleteProjectController(req, res) {
     const { id } = req.params;
 
     // Check the user role
-    if (!req.user || (req.user.role !== 'admin' && req.user.role !== 'member')) {
-        return res.status(403).json({ message: 'Access denied!' });
+    if (!req.user || (req.user.role !== "admin" && req.user.role !== "member")) {
+        return res.status(403).json({ message: "Access denied!" });
     }
 
     try {
         await projectModel.findByIdAndUpdate(id, { deleted: true });
-        res.status(200).send({ message: 'Project deleted successfully' });
+        res.status(200).send({ message: "Project deleted successfully" });
     } catch (error) {
-        console.error('Error updating project:', error);
-        res.status(500).json({ error: 'Internal server error' });
+        console.error("Error updating project:", error);
+        res.status(500).json({ error: "Internal server error" });
     }
 }
-
 
 module.exports = {
     addProjectController,
@@ -279,5 +297,6 @@ module.exports = {
     getProjectsByTypeController,
     getProjectsByDisciplineTypeController,
     updateProjectController,
-    deleteProjectController
+    deleteProjectController,
+    searchProjectsController,
 };

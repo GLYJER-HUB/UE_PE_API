@@ -8,7 +8,8 @@ const {
     getProjectByIdController,
     getProjectsByDisciplineTypeController,
     updateProjectController,
-    deleteProjectController
+    deleteProjectController,
+    searchProjectsController
 } = require('../controllers/projectController');
 const multer = require('multer')
 const path = require('path');
@@ -92,7 +93,15 @@ router.get(
 // Endpoint to get projects by discipline and type
 router.get(
     '/discipline/:discipline/type/:type',
+    cache('1 minutes'),
     getProjectsByDisciplineTypeController
+);
+
+// Endpoint to to search projects by name or authors
+router.get(
+    '/search',
+    cache('1 minute'),
+    searchProjectsController
 );
 
 // Endpoint to get a project by _id

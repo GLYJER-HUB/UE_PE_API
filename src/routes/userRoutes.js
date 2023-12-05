@@ -5,14 +5,34 @@ const {
     getUsersController,
     getUserController,
     updateUserController,
-    deleteUserController } = require('../controllers/userController');
+    deleteUserController,
+    searchUsersController
+} = require('../controllers/userController');
+const apicache = require('apicache');
+
+let cache = apicache.middleware;
+
 
 // Endpoint to add a new user
 router.post('/', verifyToken, addUserController);
 
 
 // Endpoint to get a list of users
-router.get('/', verifyToken, getUsersController);
+router.get(
+    '/',
+    verifyToken,
+    cache('1 minutes'),
+    getUsersController
+);
+
+
+// Endpoint to search users by username and role
+router.get(
+    '/',
+    verifyToken,
+    cache('1 minutes'),
+    searchUsersController
+);
 
 
 // Endpoint to get a user by _id
