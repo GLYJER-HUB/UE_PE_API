@@ -28,7 +28,7 @@ router.get(
 
 // Endpoint to search users by username and role
 router.get(
-    '/',
+    '/search',
     verifyToken,
     cache('1 minutes'),
     searchUsersController

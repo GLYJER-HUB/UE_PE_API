@@ -77,23 +77,31 @@ async function getUsersController(req, res) {
 
 // Controller to search users by username and role
 async function searchUsersController(req, res) {
+    const { query } = req.query;
     try {
         // Check the user role
         if (!req.user || (req.user.role !== 'admin' && req.user.role !== 'member')) {
             return res.status(403).json({ message: 'Access denied!' });
         }
 
-        // Retrieve all users from the database
-        const allUsers = await userModel
-            .find(
-                { deleted: false }, '-password'
-            )
+        // Build the search query
+        const searchQuery = {
+            deleted: false,
+            $or: [
+                { username: { $regex: query, $options: 'i' } },
+                { role: { $regex: query, $options: 'i' } }
+            ]
+        };
+
+        // Search for users by username or role
+        const searchResults = await userModel
+            .find(searchQuery, '-password')
             .populate([
                 { path: 'added_by', select: 'username' },
                 { path: 'modified_by', select: 'username' }
             ]);
 
-        res.status(200).send({ users: allUsers });
+        res.status(200).send({ users: searchResults });
     } catch (error) {
         console.error('Error searching users:', error);
         res.status(500).json({ error: 'Internal server error' });
