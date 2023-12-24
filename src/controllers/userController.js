@@ -24,7 +24,7 @@ async function addUserController(req, res) {
         if (error) return res.status(400).json({ message: error.details[0].message });
 
         // Check if the username is already taken
-        const existingUser = await userModel.findOne({ username: username });
+        const existingUser = await userModel.findOne({ username: username, deleted: false });
         if (existingUser) return res.status(400).json({ message: 'Username already exists' });
 
         // Hash the password 
