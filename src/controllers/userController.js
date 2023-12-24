@@ -43,7 +43,7 @@ async function addUserController(req, res) {
         // Save the document to the database
         await newUser.save();
 
-        res.status(201).json({ message: 'User created successfully', user: newUser });
+        res.status(201).json({ message: 'User created successfully'});
     } catch (error) {
         console.error('Error creating user:', error);
         res.status(500).json({ error: 'Internal server error' });
