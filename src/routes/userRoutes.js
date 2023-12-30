@@ -8,19 +8,22 @@ const {
     deleteUserController,
     searchUsersController
 } = require('../controllers/userController');
+const checkAdminOrSuperadmin = require('../middlewares/checkAdminOrSuperadmin');
+const checkUserRole = require('../middlewares/checkUserRole');
 const apicache = require('apicache');
 
 let cache = apicache.middleware;
 
 
 // Endpoint to add a new user
-router.post('/', verifyToken, addUserController);
+router.post('/', verifyToken, checkAdminOrSuperadmin, addUserController);
 
 
 // Endpoint to get a list of users
 router.get(
     '/',
     verifyToken,
+    checkUserRole,
     cache('1 minutes'),
     getUsersController
 );
@@ -30,21 +33,34 @@ router.get(
 router.get(
     '/search',
     verifyToken,
+    checkUserRole,
     cache('1 minutes'),
     searchUsersController
 );
 
 
 // Endpoint to get a user by _id
-router.get('/:id', verifyToken, getUserController);
+router.get(
+    '/:id',
+    verifyToken,
+    checkAdminOrSuperadmin,
+    getUserController);
 
 
 // Endpoint to update a user
-router.put('/:id', verifyToken, updateUserController);
+router.put(
+    '/:id',
+    verifyToken,
+    checkAdminOrSuperadmin,
+    updateUserController);
 
 
 // Endpoint to delete a user
-router.put('/delete/:id', verifyToken, deleteUserController);
+router.put(
+    '/delete/:id',
+    verifyToken,
+    checkAdminOrSuperadmin,
+    deleteUserController);
 
 
 module.exports = router;

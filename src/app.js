@@ -7,6 +7,7 @@ const userLogRoutes = require('./routes/userLogRoutes');
 const projectRoutes = require('./routes/projectRoutes');
 const cookieParser = require('cookie-parser');
 const mongoose = require('mongoose');
+const createDefaultUsers = require('./utils/userSeed');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -16,6 +17,9 @@ const connectDB = async () => {
     try {
         await mongoose.connect(process.env.MONGO_URI);
         console.log('Connected to database');
+
+        // Create default admin and superadmin users if they don't exist
+        await createDefaultUsers();
     } catch (error) {
         console.log(error);
         process.exit(1);

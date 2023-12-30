@@ -13,11 +13,6 @@ async function addUserController(req, res) {
     const { username, role } = req.body;
     const addedBy = req.user ? req.user.userId : null;
 
-    // Check the user role
-    // if (!req.user || req.user.role !== 'admin' || req.user.role !== 'superadmin') {
-    //     return res.status(403).json({ message: 'Access denied!' });
-    // }
-
     try {
         // Check if data is valid
         const { error } = addUserValidation(req.body);
@@ -43,7 +38,7 @@ async function addUserController(req, res) {
         // Save the document to the database
         await newUser.save();
 
-        res.status(201).json({ message: 'User created successfully'});
+        res.status(201).json({ message: 'User created successfully' });
     } catch (error) {
         console.error('Error creating user:', error);
         res.status(500).json({ error: 'Internal server error' });
@@ -54,11 +49,6 @@ async function addUserController(req, res) {
 // Controller to get a list of users
 async function getUsersController(req, res) {
     try {
-        // Check the user role
-        if (!req.user || (req.user.role !== 'admin' && req.user.role !== 'member')) {
-            return res.status(403).json({ message: 'Access denied!' });
-        }
-
         // Retrieve all users from the database
         const allUsers = await userModel
             .find({ deleted: false }, '-password')
@@ -79,11 +69,6 @@ async function getUsersController(req, res) {
 async function searchUsersController(req, res) {
     const { query } = req.query;
     try {
-        // Check the user role
-        if (!req.user || (req.user.role !== 'admin' && req.user.role !== 'member')) {
-            return res.status(403).json({ message: 'Access denied!' });
-        }
-
         // Build the search query
         const searchQuery = {
             deleted: false,
@@ -114,11 +99,6 @@ async function getUserController(req, res) {
     // Retrieve the id from the request params
     const { id } = req.params;
 
-    // Check the user role
-    if (!req.user || req.user.role !== 'admin') {
-        return res.status(403).json({ message: 'Access denied!' });
-    }
-
     try {
         const user = await userModel
             .findById({ _id: id, deleted: false })
@@ -141,9 +121,6 @@ async function updateUserController(req, res) {
     const { username, password, role } = req.body;
     const addedBy = req.user.userId;
     const { id } = req.params;
-
-    // Check if the authenticated user has the right to update users
-    if (!req.user || req.user.role !== 'admin') return res.status(403).json({ message: 'Access denied' });
 
     try {
         // Check if data is valid
@@ -193,13 +170,14 @@ async function deleteUserController(req, res) {
     // Retrieve the id from the request params
     const { id } = req.params;
 
-    // Check the user role
-    if (!req.user || req.user.role !== 'admin') {
-        return res.status(403).json({ message: 'Access denied!' });
-    }
-
     try {
-        await userModel.findByIdAndUpdate(id, { deleted: true });
+        // Check if the user with the given id is an admin and if the requester is a superadmin before deleting
+        const userToDelete = await userModel.findById(id, { deleted: true });
+        if (userToDelete.role === 'admin' && req.user.role !== 'superadmin') {
+            return res.status(404).json({ message: 'Access denied! Cannot delete an admin user.' });
+        }
+
+        await userToDelete.updateOne({ deleted: true });
         res.status(200).send({ message: 'User deleted successfully' });
     } catch (error) {
         console.error('Error getting the user:', error);

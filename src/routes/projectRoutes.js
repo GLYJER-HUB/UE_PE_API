@@ -13,6 +13,7 @@ const {
 } = require('../controllers/projectController');
 const multer = require('multer')
 const path = require('path');
+const checkAdminOrMember = require('../middlewares/checkAdminOrMember');
 const apicache = require('apicache');
 
 let cache = apicache.middleware;
@@ -68,6 +69,7 @@ const upload = multer({
 router.post(
     '/',
     verifyToken,
+    checkAdminOrMember,
     upload,
     addProjectController
 );
@@ -108,9 +110,18 @@ router.get(
 router.get('/id/:id', getProjectByIdController);
 
 // Endpoint to update a project
-router.put('/:id', verifyToken, upload, updateProjectController);
+router.put(
+    '/:id',
+    verifyToken,
+    checkAdminOrMember,
+    upload,
+    updateProjectController);
 
 // Endpoint to delete a project
-router.put('/delete/:id', verifyToken, deleteProjectController);
+router.put(
+    '/delete/:id',
+    verifyToken,
+    checkAdminOrMember,
+    deleteProjectController);
 
 module.exports = router;

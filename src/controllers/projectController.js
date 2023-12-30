@@ -33,11 +33,6 @@ async function addProjectController(req, res) {
 
     const addedBy = req.user ? req.user.userId : null;
 
-    // Check the user role
-    if (!req.user || (req.user.role !== "admin" && req.user.role !== "member")) {
-        return res.status(403).json({ message: "Access denied!" });
-    }
-
     try {
         // Check if data is valid
         const { error } = addProjectValidation(req.body);
@@ -224,11 +219,6 @@ async function updateProjectController(req, res) {
     const addedBy = req.user ? req.user.userId : null;
     const { id } = req.params;
 
-    // Check the user role
-    if (!req.user || (req.user.role !== "admin" && req.user.role !== "member")) {
-        return res.status(403).json({ message: "Access denied!" });
-    }
-
     try {
         // Check if data is valid
         const { error } = updateProjectValidation(req.body);
@@ -274,11 +264,6 @@ async function updateProjectController(req, res) {
 async function deleteProjectController(req, res) {
     // Retrieve the id from the request params
     const { id } = req.params;
-
-    // Check the user role
-    if (!req.user || (req.user.role !== "admin" && req.user.role !== "member")) {
-        return res.status(403).json({ message: "Access denied!" });
-    }
 
     try {
         await projectModel.findByIdAndUpdate(id, { deleted: true });
