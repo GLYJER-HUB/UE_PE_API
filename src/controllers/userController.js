@@ -14,9 +14,9 @@ async function addUserController(req, res) {
     const addedBy = req.user ? req.user.userId : null;
 
     // Check the user role
-    if (!req.user || req.user.role !== 'admin') {
-        return res.status(403).json({ message: 'Access denied!' });
-    }
+    // if (!req.user || req.user.role !== 'admin' || req.user.role !== 'superadmin') {
+    //     return res.status(403).json({ message: 'Access denied!' });
+    // }
 
     try {
         // Check if data is valid

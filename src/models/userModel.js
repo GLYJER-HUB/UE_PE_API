@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const roleEnum = ['admin', 'member'];
+const roleEnum = ['admin', 'member', 'superadmin',];
 
 // Create the user schema
 const userSchema = new mongoose.Schema({
