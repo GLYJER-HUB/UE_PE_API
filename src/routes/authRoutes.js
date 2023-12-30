@@ -2,7 +2,7 @@ const router = require('express').Router();
 const {
     loginController,
     logoutController } = require('../controllers/authController');
-const verifyToken = require('../utils/jwtVerification');
+const verifyToken = require('../middlewares/jwtVerification');
 
 // Create login endpoint
 router.post('/login', loginController);

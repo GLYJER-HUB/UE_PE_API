@@ -1,5 +1,5 @@
 const router = require('express').Router();
-const verifyToken = require('../utils/jwtVerification');
+const verifyToken = require('../middlewares/jwtVerification');
 const {
     addLogController,
     updateLogController
