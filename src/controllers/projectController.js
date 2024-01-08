@@ -89,7 +89,7 @@ async function getProjectsByDisciplineController(req, res) {
     try {
         // Retrieve all projects from the database by discipline
         const allProjects = await projectModel
-            .find({ discipline: discipline }, { deleted: false })
+            .find({ discipline: discipline, deleted: false })
             .populate([
                 { path: "added_by", select: "username" },
                 { path: "last_modified_by", select: "username" },
@@ -108,7 +108,7 @@ async function getProjectsByTypeController(req, res) {
     try {
         // Retrieve all projects from the database by type
         const allProjects = await projectModel
-            .find({ type: type }, { deleted: false })
+            .find({ type: type , deleted: false })
             .populate([
                 { path: "added_by", select: "username" },
                 { path: "last_modified_by", select: "username" },
