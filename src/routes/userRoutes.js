@@ -24,7 +24,6 @@ router.get(
     '/',
     verifyToken,
     checkUserRole,
-    cache('1 minutes'),
     getUsersController
 );
 
@@ -34,7 +33,6 @@ router.get(
     '/search',
     verifyToken,
     checkUserRole,
-    cache('1 minutes'),
     searchUsersController
 );
 
