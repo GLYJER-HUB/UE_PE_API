@@ -14,9 +14,6 @@ const {
 const multer = require('multer')
 const path = require('path');
 const checkAdminOrMember = require('../middlewares/checkAdminOrMember');
-const apicache = require('apicache');
-
-let cache = apicache.middleware;
 
 // Setup the location to save the files
 const storage = multer.diskStorage({
