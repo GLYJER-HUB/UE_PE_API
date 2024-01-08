@@ -77,32 +77,27 @@ router.post(
 // Endpoint to get all projects
 router.get(
     '/',
-    cache('1 minutes'),
     getProjectsController);
 
 // Endpoint to get projects by discipline
 router.get(
     '/discipline/:discipline',
-    cache('1 minutes'),
     getProjectsByDisciplineController);
 
 // Endpoint to get projects by type
 router.get(
     '/type/:type',
-    cache('1 minutes'),
     getProjectsByTypeController);
 
 // Endpoint to get projects by discipline and type
 router.get(
     '/discipline/:discipline/type/:type',
-    cache('1 minutes'),
     getProjectsByDisciplineTypeController
 );
 
 // Endpoint to to search projects by name or authors
 router.get(
     '/search',
-    cache('1 minute'),
     searchProjectsController
 );
 
