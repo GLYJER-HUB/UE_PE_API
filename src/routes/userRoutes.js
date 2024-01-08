@@ -10,9 +10,6 @@ const {
 } = require('../controllers/userController');
 const checkAdminOrSuperadmin = require('../middlewares/checkAdminOrSuperadmin');
 const checkUserRole = require('../middlewares/checkUserRole');
-const apicache = require('apicache');
-
-let cache = apicache.middleware;
 
 
 // Endpoint to add a new user
