@@ -51,7 +51,7 @@ async function getUsersController(req, res) {
     try {
         // Retrieve all users from the database
         const allUsers = await userModel
-            .find({ deleted: false }, '-password')
+            .find({ deleted: false },)
             .populate([
                 { path: 'added_by', select: 'username' },
                 { path: 'modified_by', select: 'username' }
@@ -80,7 +80,7 @@ async function searchUsersController(req, res) {
 
         // Search for users by username or role
         const searchResults = await userModel
-            .find(searchQuery, '-password')
+            .find(searchQuery)
             .populate([
                 { path: 'added_by', select: 'username' },
                 { path: 'modified_by', select: 'username' }
