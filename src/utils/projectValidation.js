@@ -8,7 +8,7 @@ const addProjectValidation = (data) => {
         discipline: Joi.string().max(50).required(),
         type: Joi.string().min(5).max(50).required(),
         cover: Joi.string().optional(),
-        projectUrl: Joi.string().optional(),
+        projectUrl: Joi.string().uri().optional(),
         authors: Joi.array().items(Joi.string()),
         yearOfSubmission: Joi.number().invalid().required(),
     });
@@ -23,7 +23,7 @@ const updateProjectValidation = (data) => {
         discipline: Joi.string().max(50).optional(),
         type: Joi.string().min(5).max(50).optional(),
         cover: Joi.string().optional(),
-        projectUrl: Joi.string().optional(),
+        projectUrl: Joi.string().uri().optional(),
         authors: Joi.array().items(Joi.string()).optional(),
         yearOfSubmission: Joi.number().invalid().optional(),
     });
