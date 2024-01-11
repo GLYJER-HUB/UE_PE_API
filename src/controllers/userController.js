@@ -130,7 +130,7 @@ async function updateUserController(req, res) {
         // Check if the username is already taken
         if (username) {
             const existingUser = await userModel.findOne({ username: username });
-            if (existingUser) return res.status(400).json({ message: 'Username already exists' });
+            if (existingUser && existingUser.username !== username) return res.status(400).json({ message: 'Username already exists' });
         }
 
         // Hash the password 
