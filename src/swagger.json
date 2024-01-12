@@ -1,0 +1,1086 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "UE API",
+    "description": "This is a Classification API application made with Express and documented with Swagger",
+    "version": "1.0"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:3000",
+      "description": "Local server"
+    }
+  ],
+  "paths": {
+    "/api/auth/login": {
+      "post": {
+        "summary": "Authenticate user",
+        "tags": ["Authentication"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["username", "password"],
+                "properties": {
+                  "username": {
+                    "type": "string",
+                    "description": "The username of the user"
+                  },
+                  "password": {
+                    "type": "string",
+                    "description": "The password of the user"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Authentication successful",
+            "content": {
+              "application/json": {
+                "example": {
+                  "userName": "john_doe",
+                  "userId": 123456,
+                  "role": "user"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request (e.g., missing required fields or invalid data)"
+          },
+          "401": {
+            "description": "Invalid username or password"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/api/auth/logout": {
+      "post": {
+        "summary": "Logout user",
+        "tags": ["Authentication"],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Logout successful"
+          },
+          "401": {
+            "description": "Unauthorized (token missing or invalid)"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/api/logs": {
+      "post": {
+        "summary": "Add a new user log",
+        "tags": ["UserLog"],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["userId", "loginTime", "logoutTime"],
+                "properties": {
+                  "userId": {
+                    "type": "string",
+                    "description": "The ID of the user"
+                  },
+                  "loginTime": {
+                    "type": "string",
+                    "format": "date-time",
+                    "description": "The login time"
+                  },
+                  "logoutTime": {
+                    "type": "string",
+                    "format": "date-time",
+                    "description": "The logout time"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "User log added successfully",
+            "content": {
+              "application/json": {
+                "example": {
+                  "logId": 123456
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Unauthorized (token missing or invalid)"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/api/logs/{id}": {
+      "put": {
+        "summary": "Update user log",
+        "tags": ["UserLog"],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "The ID of the user log"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["logoutTime"],
+                "properties": {
+                  "logoutTime": {
+                    "type": "string",
+                    "format": "date-time",
+                    "description": "The updated logout time"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "User log updated successfully"
+          },
+          "403": {
+            "description": "Unauthorized (token missing or invalid)"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },    
+    "/api/users": {
+      "post": {
+        "summary": "Add a new user",
+        "tags": ["Users"],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AddUser"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "User created successfully"
+          },
+          "400": {
+            "description": "Bad request or validation error"
+          },
+          "403": {
+            "description": "Access denied (insufficient permissions)"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      },
+      "get": {
+        "summary": "Get a list of users",
+        "tags": ["Users"],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/UserSearchQuery"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of users",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "users": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/User"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Access denied (insufficient permissions)"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/api/users/search": {
+      "get": {
+        "summary": "Search users by username and role",
+        "tags": ["Users"],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/UserSearchQuery"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of users matching the search query",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "users": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/User"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Access denied (insufficient permissions)"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/api/users/{id}": {
+      "get": {
+        "summary": "Get user by ID",
+        "tags": ["Users"],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/UserId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "User details",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Access denied (insufficient permissions)"
+          },
+          "404": {
+            "description": "User not found"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      },
+      "put": {
+        "summary": "Update user by ID",
+        "tags": ["Users"],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/UserId"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateUser"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "User updated successfully"
+          },
+          "400": {
+            "description": "Bad request or validation error"
+          },
+          "403": {
+            "description": "Access denied (insufficient permissions)"
+          },
+          "404": {
+            "description": "User not found"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/api/users/delete/{id}": {
+      "put": {
+        "summary": "Delete user by ID",
+        "tags": ["Users"],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/UserId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "User deleted successfully"
+          },
+          "403": {
+            "description": "Access denied (insufficient permissions)"
+          },
+          "404": {
+            "description": "User not found"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/api/projects": {
+      "post": {
+        "summary": "Add a new project",
+        "tags": ["Projects"],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/Project"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Project created successfully",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Project created successfully",
+                  "project": {
+                    "projectName": "My Project",
+                    "description": "This is a sample project",
+                    "discipline": "Computer Science",
+                    "type": "Web application",
+                    "authors": ["Author1", "Author2"],
+                    "yearOfSubmission": 2022
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request. Validation error.",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Validation error details"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "summary": "Get all projects",
+        "tags": ["Projects"],
+        "responses": {
+          "200": {
+            "description": "Returns a list of projects",
+            "content": {
+              "application/json": {
+                "example": {
+                  "projects": [
+                    {
+                      "projectName": "Project1",
+                      "description": "Description1",
+                      "discipline": "Discipline1",
+                      "type": "Type1",
+                      "authors": ["Author1"],
+                      "yearOfSubmission": 2022
+                    },
+                    {
+                      "projectName": "Project2",
+                      "description": "Description2",
+                      "discipline": "Discipline2",
+                      "type": "Type2",
+                      "authors": ["Author2"],
+                      "yearOfSubmission": 2022
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "example": {
+                  "error": "Internal server error"
+                }
+              }
+            }
+          }
+        }
+      }
+  },
+  "/api/projects/discipline/{discipline}": {
+    "get": {
+      "summary": "Get projects by discipline",
+      "tags": ["Projects"],
+      "parameters": [
+        {
+          "in": "path",
+          "name": "discipline",
+          "required": true,
+          "schema": {
+            "type": "string"
+          },
+          "description": "Discipline of the projects to retrieve"
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "List of projects by discipline",
+          "content": {
+            "application/json": {
+              "example": {
+                "projects": [
+                  {
+                    "projectName": "Project1",
+                    "description": "Description1",
+                    "discipline": "Discipline1",
+                    "type": "Type1",
+                    "authors": ["Author1"],
+                    "yearOfSubmission": 2022
+                  },
+                  {
+                    "projectName": "Project2",
+                    "description": "Description2",
+                    "discipline": "Discipline1",
+                    "type": "Type2",
+                    "authors": ["Author2"],
+                    "yearOfSubmission": 2022
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "404": {
+          "description": "No projects found for the specified discipline",
+          "content": {
+            "application/json": {
+              "example": {
+                "message": "No projects found for the specified discipline"
+              }
+            }
+          }
+        },
+        "500": {
+          "description": "Internal server error",
+          "content": {
+            "application/json": {
+              "example": {
+                "error": "Internal server error"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "/api/projects/type/{type}": {
+    "get": {
+      "summary": "Get projects by type",
+      "tags": ["Projects"],
+      "parameters": [
+        {
+          "in": "path",
+          "name": "type",
+          "required": true,
+          "schema": {
+            "type": "string"
+          },
+          "description": "Type of the projects to retrieve"
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "List of projects by type",
+          "content": {
+            "application/json": {
+              "example": {
+                "projects": [
+                  {
+                    "projectName": "Project1",
+                    "description": "Description1",
+                    "discipline": "Discipline1",
+                    "type": "Type1",
+                    "authors": ["Author1"],
+                    "yearOfSubmission": 2022
+                  },
+                  {
+                    "projectName": "Project2",
+                    "description": "Description2",
+                    "discipline": "Discipline2",
+                    "type": "Type1",
+                    "authors": ["Author2"],
+                    "yearOfSubmission": 2022
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "404": {
+          "description": "No projects found for the specified type",
+          "content": {
+            "application/json": {
+              "example": {
+                "message": "No projects found for the specified type"
+              }
+            }
+          }
+        },
+        "500": {
+          "description": "Internal server error",
+          "content": {
+            "application/json": {
+              "example": {
+                "error": "Internal server error"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "/api/projects/discipline/{discipline}/type/{type}": {
+    "get": {
+      "summary": "Get projects by discipline and type",
+      "tags": ["Projects"],
+      "parameters": [
+        {
+          "in": "path",
+          "name": "discipline",
+          "required": true,
+          "schema": {
+            "type": "string"
+          },
+          "description": "Discipline of the projects to retrieve"
+        },
+        {
+          "in": "path",
+          "name": "type",
+          "required": true,
+          "schema": {
+            "type": "string"
+          },
+          "description": "Type of the projects to retrieve"
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "List of projects by discipline and type",
+          "content": {
+            "application/json": {
+              "example": {
+                "projects": [
+                  {
+                    "projectName": "Project1",
+                    "description": "Description1",
+                    "discipline": "Discipline1",
+                    "type": "Type1",
+                    "authors": ["Author1"],
+                    "yearOfSubmission": 2022
+                  },
+                  {
+                    "projectName": "Project2",
+                    "description": "Description2",
+                    "discipline": "Discipline1",
+                    "type": "Type2",
+                    "authors": ["Author2"],
+                    "yearOfSubmission": 2022
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "404": {
+          "description": "No projects found for the specified discipline and type",
+          "content": {
+            "application/json": {
+              "example": {
+                "message": "No projects found for the specified discipline and type"
+              }
+            }
+          }
+        },
+        "500": {
+          "description": "Internal server error",
+          "content": {
+            "application/json": {
+              "example": {
+                "error": "Internal server error"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "/api/projects/search": {
+    "get": {
+      "summary": "Search projects",
+      "tags": ["Projects"],
+      "parameters": [
+        {
+          "$ref": "#/components/parameters/ProjectSearchQuery"
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "List of projects matching the search query",
+          "content": {
+            "application/json": {
+              "example": {
+                "projects": [
+                  {
+                    "projectName": "Project1",
+                    "description": "Description1",
+                    "discipline": "Discipline1",
+                    "type": "Type1",
+                    "authors": ["Author1"],
+                    "yearOfSubmission": 2022
+                  },
+                  {
+                    "projectName": "Project2",
+                    "description": "Description2",
+                    "discipline": "Discipline2",
+                    "type": "Type2",
+                    "authors": ["Author2"],
+                    "yearOfSubmission": 2022
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "500": {
+          "description": "Internal server error",
+          "content": {
+            "application/json": {
+              "example": {
+                "error": "Internal server error"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "/api/projects/id/{id}": {
+    "get": {
+      "summary": "Get project by ID",
+      "tags": ["Projects"],
+      "parameters": [
+        {
+          "$ref": "#/components/parameters/ProjectId"
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Project details",
+          "content": {
+            "application/json": {
+              "example": {
+                "projectName": "Project1",
+                "description": "Description1",
+                "discipline": "Discipline1",
+                "type": "Type1",
+                "authors": ["Author1"],
+                "yearOfSubmission": 2022
+              }
+            }
+          }
+        },
+        "404": {
+          "description": "Project not found",
+          "content": {
+            "application/json": {
+              "example": {
+                "message": "Project not found"
+              }
+            }
+          }
+        },
+        "500": {
+          "description": "Internal server error",
+          "content": {
+            "application/json": {
+              "example": {
+                "error": "Internal server error"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "/api/projects/{id}": {
+    "put": {
+      "summary": "Update a project by ID",
+      "tags": ["Projects"],
+      "security": [
+        {
+          "bearerAuth": []
+        }
+      ],
+      "parameters": [
+        {
+          "in": "path",
+          "name": "id",
+          "schema": {
+            "type": "string"
+          },
+          "required": true,
+          "description": "ID of the project to update"
+        }
+      ],
+      "requestBody": {
+        "required": true,
+        "content": {
+          "multipart/form-data": {
+            "schema": {
+              "$ref": "#/components/schemas/Project"
+            }
+          }
+        }
+      },
+      "responses": {
+        "200": {
+          "description": "Project updated successfully",
+          "content": {
+            "application/json": {
+              "example": {
+                "message": "Project updated successfully",
+                "project": {
+                  "projectName": "Updated Project",
+                  "description": "Updated project description",
+                  "discipline": "Computer Science",
+                  "type": "Web application",
+                  "authors": ["UpdatedAuthor"],
+                  "yearOfSubmission": 2022
+                }
+              }
+            }
+          }
+        },
+        "400": {
+          "description": "Bad request. Validation error.",
+          "content": {
+            "application/json": {
+              "example": {
+                "message": "Validation error details"
+              }
+            }
+          }
+        },
+        "404": {
+          "description": "Project not found",
+          "content": {
+            "application/json": {
+              "example": {
+                "message": "Project not found"
+              }
+            }
+          }
+        },
+        "500": {
+          "description": "Internal server error",
+          "content": {
+            "application/json": {
+              "example": {
+                "error": "Internal server error"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "/api/projects/delete/{id}": {
+    "put": {
+      "summary": "Delete a project by ID",
+      "tags": ["Projects"],
+      "security": [
+        {
+          "bearerAuth": []
+        }
+      ],
+      "parameters": [
+        {
+          "in": "path",
+          "name": "id",
+          "schema": {
+            "type": "string"
+          },
+          "required": true,
+          "description": "ID of the project to delete"
+        }
+      ],
+      "responses": {
+        "200": {
+          "description": "Project deleted successfully",
+          "content": {
+            "application/json": {
+              "example": {
+                "message": "Project deleted successfully"
+              }
+            }
+          }
+        },
+        "404": {
+          "description": "Project not found",
+          "content": {
+            "application/json": {
+              "example": {
+                "message": "Project not found"
+              }
+            }
+          }
+        },
+        "500": {
+          "description": "Internal server error",
+          "content": {
+            "application/json": {
+              "example": {
+                "error": "Internal server error"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+},
+  "components": {
+    "schemas": {
+      "AddUser": {
+        "type": "object",
+        "required": ["username", "password", "role"],
+        "properties": {
+          "username": {
+            "type": "string",
+            "description": "The username of the user",
+            "minLength": 4,
+            "maxLength": 50
+          },
+          "password": {
+            "type": "string",
+            "description": "The password of the user",
+            "minLength": 6,
+            "maxLength": 1024
+          },
+          "role": {
+            "type": "string",
+            "description": "The role of the user",
+            "enum": ["admin", "member", "superadmin"]
+          }
+        }
+      },
+      "User": {
+        "type": "object",
+        "properties": {
+          "_id": {
+            "type": "string",
+            "description": "The unique identifier of the user"
+          },
+          "username": {
+            "type": "string",
+            "description": "The username of the user"
+          },
+          "role": {
+            "type": "string",
+            "description": "The role of the user"
+          },
+          "deleted": {
+            "type": "boolean",
+            "description": "Indicates whether the user is deleted"
+          },
+          "added_by": {
+            "type": "object",
+            "description": "The user who added this user",
+            "properties": {
+              "_id": {
+                "type": "string",
+                "description": "The unique identifier of the adding user"
+              },
+              "username": {
+                "type": "string",
+                "description": "The username of the adding user"
+              }
+            }
+          },
+          "modified_by": {
+            "type": "object",
+            "description": "The user who last modified this user",
+            "properties": {
+              "_id": {
+                "type": "string",
+                "description": "The unique identifier of the modifying user"
+              },
+              "username": {
+                "type": "string",
+                "description": "The username of the modifying user"
+              }
+            }
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "The timestamp when the user was created"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "The timestamp when the user was last updated"
+          }
+        }
+      },
+      "UpdateUser": {
+        "type": "object",
+        "properties": {
+          "username": {
+            "type": "string",
+            "description": "The new username of the user (optional)",
+            "minLength": 4,
+            "maxLength": 50
+          },
+          "password": {
+            "type": "string",
+            "description": "The new password of the user (optional)",
+            "minLength": 6,
+            "maxLength": 1024
+          },
+          "role": {
+            "type": "string",
+            "description": "The new role of the user (optional)",
+            "enum": ["admin", "member", "superadmin"]
+          }
+        }
+      }
+    },
+    "parameters": {
+      "UserId": {
+        "name": "id",
+        "in": "path",
+        "required": true,
+        "description": "The unique identifier of the user",
+        "schema": {
+          "type": "string",
+          "format": "uuid"
+        }
+      },
+      "UserSearchQuery": {
+        "name": "query",
+        "in": "query",
+        "required": false,
+        "description": "The search query for username or role",
+        "schema": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}
+
+

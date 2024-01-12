@@ -8,6 +8,8 @@ const {
     updateLogController } = require('../controllers/userLogController');
 
 // Create login Controller
+
+
 async function loginController(req, res) {
     // Retrieve data from the request
     const { username, password } = req.body;

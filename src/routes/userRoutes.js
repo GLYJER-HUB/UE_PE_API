@@ -14,12 +14,52 @@ const apicache = require('apicache');
 
 let cache = apicache.middleware;
 
-
-// Endpoint to add a new user
+/**
+ * @swagger
+ * /api/users:
+ *   post:
+ *     summary: Add a new user.
+ *     tags:
+ *       - Users
+ *     security:
+ *       - BearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/AddUser'
+ *     responses:
+ *       201:
+ *         description: User created successfully.
+ *       400:
+ *         description: Bad request or validation error.
+ *       403:
+ *         description: Access denied (insufficient permissions).
+ *       500:
+ *         description: Internal server error.
+ */
 router.post('/', verifyToken, checkAdminOrSuperadmin, addUserController);
 
-
-// Endpoint to get a list of users
+/**
+ * @swagger
+ * /api/users:
+ *   get:
+ *     summary: Get a list of users.
+ *     tags:
+ *       - Users
+ *     security:
+ *       - BearerAuth: []
+ *     parameters:
+ *       - $ref: '#/components/parameters/UserSearchQuery'
+ *     responses:
+ *       200:
+ *         description: List of users.
+ *       403:
+ *         description: Access denied (insufficient permissions).
+ *       500:
+ *         description: Internal server error.
+ */
 router.get(
     '/',
     verifyToken,
@@ -28,8 +68,25 @@ router.get(
     getUsersController
 );
 
-
-// Endpoint to search users by username and role
+/**
+ * @swagger
+ * /api/users/search:
+ *   get:
+ *     summary: Search users by username and role.
+ *     tags:
+ *       - Users
+ *     security:
+ *       - BearerAuth: []
+ *     parameters:
+ *       - $ref: '#/components/parameters/UserSearchQuery'
+ *     responses:
+ *       200:
+ *         description: List of users matching the search query.
+ *       403:
+ *         description: Access denied (insufficient permissions).
+ *       500:
+ *         description: Internal server error.
+ */
 router.get(
     '/search',
     verifyToken,
@@ -38,29 +95,96 @@ router.get(
     searchUsersController
 );
 
-
-// Endpoint to get a user by _id
+/**
+ * @swagger
+ * /api/users/{id}:
+ *   get:
+ *     summary: Get user by ID.
+ *     tags:
+ *       - Users
+ *     security:
+ *       - BearerAuth: []
+ *     parameters:
+ *       - $ref: '#/components/parameters/UserId'
+ *     responses:
+ *       200:
+ *         description: User details.
+ *       403:
+ *         description: Access denied (insufficient permissions).
+ *       404:
+ *         description: User not found.
+ *       500:
+ *         description: Internal server error.
+ */
 router.get(
     '/:id',
     verifyToken,
     checkAdminOrSuperadmin,
-    getUserController);
+    getUserController
+);
 
-
-// Endpoint to update a user
+/**
+ * @swagger
+ * /api/users/{id}:
+ *   put:
+ *     summary: Update user by ID.
+ *     tags:
+ *       - Users
+ *     security:
+ *       - BearerAuth: []
+ *     parameters:
+ *       - $ref: '#/components/parameters/UserId'
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/UpdateUser'
+ *     responses:
+ *       200:
+ *         description: User updated successfully.
+ *       400:
+ *         description: Bad request or validation error.
+ *       403:
+ *         description: Access denied (insufficient permissions).
+ *       404:
+ *         description: User not found.
+ *       500:
+ *         description: Internal server error.
+ */
 router.put(
     '/:id',
     verifyToken,
     checkAdminOrSuperadmin,
-    updateUserController);
+    updateUserController
+);
 
-
-// Endpoint to delete a user
+/**
+ * @swagger
+ * /api/users/delete/{id}:
+ *   put:
+ *     summary: Delete user by ID.
+ *     tags:
+ *       - Users
+ *     security:
+ *       - BearerAuth: []
+ *     parameters:
+ *       - $ref: '#/components/parameters/UserId'
+ *     responses:
+ *       200:
+ *         description: User deleted successfully.
+ *       403:
+ *         description: Access denied (insufficient permissions).
+ *       404:
+ *         description: User not found.
+ *       500:
+ *         description: Internal server error.
+ */
 router.put(
     '/delete/:id',
     verifyToken,
     checkAdminOrSuperadmin,
-    deleteUserController);
-
+    deleteUserController
+);
 
 module.exports = router;
