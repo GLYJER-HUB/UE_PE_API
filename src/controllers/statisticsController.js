@@ -12,11 +12,12 @@ async function getStatisticsController(req, res) {
       deleted: false,
     });
 
-    // Return the statistics
-    res.status(200).json({
+    const statistics = {
       users: numberOfUsers,
       projects: numberOfProjects,
-    });
+    };
+
+    res.status(200).json({ statistics: statistics });
   } catch (error) {
     console.error("Error retrieving statistics:", error);
     res.status(500).json({ error: "Internal server error" });
