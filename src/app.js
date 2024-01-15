@@ -45,7 +45,7 @@ app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/logs", userLogRoutes);
 app.use("/api/projects", projectRoutes);
-app.use("api/statistics", statisticsRoutes);
+app.use("/api/statistics", statisticsRoutes);
 
 // Launch the server
 connectDB().then(() => {
