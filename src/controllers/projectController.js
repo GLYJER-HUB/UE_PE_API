@@ -12,12 +12,12 @@ async function addProjectController(req, res) {
     if (Object.keys(req.files).length !== 0) {
         // Check if the 'image' property exists in req.files
         if (req.files.image && req.files.image.length > 0) {
-            coverPath = `uploads\\image\\${req.files.image[0].filename}`;
+            coverPath = `uploads/image/${req.files.image[0].filename}`;
         }
 
         // Check if the 'document' property exists in req.files
         if (req.files.document && req.files.document.length > 0) {
-            pdfPath = `uploads\\document\\${req.files.document[0].filename}`;
+            pdfPath = `uploads/document/${req.files.document[0].filename}`;
         }
     }
 
@@ -197,12 +197,12 @@ async function updateProjectController(req, res) {
     if (Object.keys(req.files).length !== 0) {
         // Check if the 'image' property exists in req.files
         if (req.files.image && req.files.image.length > 0) {
-            coverPath = `uploads\\image\\${req.files.image[0].filename}`;
+            coverPath = `uploads/image/${req.files.image[0].filename}`;
         }
 
         // Check if the 'document' property exists in req.files
         if (req.files.document && req.files.document.length > 0) {
-            pdfPath = `uploads\\document\\${req.files.document[0].filename}`;
+            pdfPath = `uploads/document/${req.files.document[0].filename}`;
         }
     }
 
