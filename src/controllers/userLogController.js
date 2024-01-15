@@ -2,7 +2,7 @@ const userLogModel = require("../models/userLogModel");
 require("dotenv/config");
 
 // Controller to get userLogs
-const getLogsController = async () => {
+const getLogsController = async (req, res) => {
   try {
     // Retrieve all userlogs from the database
     const allLogs = await userLogModel
