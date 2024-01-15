@@ -55,7 +55,7 @@ async function getUsersController(req, res) {
             .populate([
                 { path: 'added_by', select: 'username' },
                 { path: 'modified_by', select: 'username' }
-            ]);
+            ]).sort({ createdAt: -1 });
 
         res.status(200).send({ users: allUsers });
     } catch (error) {
