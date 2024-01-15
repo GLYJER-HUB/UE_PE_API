@@ -1,13 +1,13 @@
-require("dotenv/config");
-const express = require("express");
-const cors = require("cors");
-const authRoutes = require("./routes/authRoutes");
-const userRoutes = require("./routes/userRoutes");
-const userLogRoutes = require("./routes/userLogRoutes");
-const projectRoutes = require("./routes/projectRoutes");
-const cookieParser = require("cookie-parser");
-const mongoose = require("mongoose");
-const createDefaultUsers = require("./utils/userSeed");
+require('dotenv/config');
+const express = require('express');
+const cors = require('cors');
+const authRoutes = require('./routes/authRoutes');
+const userRoutes = require('./routes/userRoutes');
+const userLogRoutes = require('./routes/userLogRoutes');
+const projectRoutes = require('./routes/projectRoutes');
+const cookieParser = require('cookie-parser');
+const mongoose = require('mongoose');
+const createDefaultUsers = require('./utils/userSeed');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -30,12 +30,13 @@ const connectDB = async () => {
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.use(
-  cors({
-    credentials: true,
-    origin: ["http://localhost:3000", "http://localhost:5173", "*"],
-  })
-);
+app.use(cors({
+    credentials: true, origin: [
+        "http://localhost:3000",
+        "http://localhost:5173",
+        "*"
+    ]
+}));
 app.use("/files", express.static(__dirname + "/../uploads"));
 
 // Routes
@@ -46,7 +47,7 @@ app.use("/api/projects", projectRoutes);
 
 // Launch the server
 connectDB().then(() => {
-  app.listen(PORT, () => {
-    console.log(`It's alive on http://localhost:${PORT}`);
-  });
-});
+    app.listen(PORT, () => {
+        console.log(`It's alive on http://localhost:${PORT}`)
+    })
+})
