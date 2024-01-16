@@ -45,6 +45,7 @@ const projectSchema = new mongoose.Schema({
 
     pdf_file: {
         type: String
+        required: true,
     },
 
     project_url: {
