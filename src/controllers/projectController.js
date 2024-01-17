@@ -9,6 +9,7 @@ async function addProjectController(req, res) {
   // Retrieve data from the request
   let coverPath = null;
   let pdfPath = null;
+
   if (Object.keys(req.files).length !== 0) {
     // Check if the 'image' property exists in req.files
     if (req.files.image && req.files.image.length > 0) {
