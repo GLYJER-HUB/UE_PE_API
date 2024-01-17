@@ -20,7 +20,7 @@ async function addProjectController(req, res) {
       pdfPath = `files/document/${req.files.document[0].filename}`;
     }
   } else {
-    return res.status(400).json({ message: "Un document PDF est requis." });
+    return res.status(400).json({ message: "Le document PDF du projet est requis." });
   }
 
   const {
