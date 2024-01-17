@@ -19,6 +19,8 @@ async function addProjectController(req, res) {
     if (req.files.document && req.files.document.length > 0) {
       pdfPath = `files/document/${req.files.document[0].filename}`;
     }
+  } else {
+    return res.status(400).json({ message: "Un document PDF est requis." });
   }
 
   const {
@@ -58,7 +60,7 @@ async function addProjectController(req, res) {
     await newProject.save();
 
     res.status(201).json({
-      message: "Project created successfully",
+      message: "Projet créé avec succès.",
       project: newProject,
     });
   } catch (error) {
@@ -185,7 +187,7 @@ async function getProjectByIdController(req, res) {
       ]);
 
     if (!project) {
-      return res.status(404).json({ message: "Project not found" });
+      return res.status(404).json({ message: "Projet non trouvé." });
     }
 
     res.status(200).send(project);
@@ -236,7 +238,7 @@ async function updateProjectController(req, res) {
 
     // Check if the project exists
     if (!projectToUpdate) {
-      return res.status(404).json({ message: "Project not found" });
+      return res.status(404).json({ message: "Projet non trouvé." });
     }
 
     // Update the document in the database
@@ -257,7 +259,7 @@ async function updateProjectController(req, res) {
     });
 
     res.status(200).json({
-      message: "Project updated successfully",
+      message: "Projet mis à jour avec succès.",
       project: projectToUpdate,
     });
   } catch (error) {
@@ -273,7 +275,7 @@ async function deleteProjectController(req, res) {
 
   try {
     await projectModel.findByIdAndUpdate(id, { deleted: true });
-    res.status(200).send({ message: "Project deleted successfully" });
+    res.status(200).send({ message: "Projet supprimé avec succès." });
   } catch (error) {
     console.error("Error updating project:", error);
     res.status(500).json({ error: "Internal server error" });
