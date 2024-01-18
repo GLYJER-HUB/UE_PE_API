@@ -49,7 +49,9 @@ async function loginController(req, res) {
         res.status(200).json({
             userName: user.username,
             userId: user._id,
-            role: user.role
+            role: user.role,
+            accessToken: jwtToken,
+            success: true
         });
     } catch (error) {
         console.error('Error login:', error);

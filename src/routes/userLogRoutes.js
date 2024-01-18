@@ -33,7 +33,6 @@ const {
  *             required:
  *               - userId
  *               - loginTime
- *               - logoutTime
  *             properties:
  *               userId:
  *                 type: string
@@ -46,6 +45,7 @@ const {
  *                 type: string
  *                 format: date-time
  *                 description: The logout time
+ *                 required: false
  *     responses:
  *       200:
  *         description: User log added successfully

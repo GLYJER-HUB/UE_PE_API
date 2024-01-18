@@ -4,7 +4,8 @@ const {
     updateUserValidation
 } = require("../utils/userValidation");
 const bcrypt = require("bcryptjs");
-require("dotenv/config");
+const { v4: uuidv4 } = require('uuid');
+require('dotenv/config');
 
 // Controller to add a new user
 async function addUserController(req, res) {
@@ -31,6 +32,7 @@ async function addUserController(req, res) {
 
         // Create a new user document
         const newUser = new userModel({
+            _id: uuidv4(),
             username: username,
             password: hashedPassword,
             role: role,
@@ -101,12 +103,21 @@ async function getUserController(req, res) {
     const { id } = req.params;
 
     try {
+        // Validate that the ID is a valid GUID
+        if (!uuidv4(id)) {
+            return res.status(400).json({ message: 'Invalid ID format. Must be a valid GUID.'});
+        }
+
         const user = await userModel
             .findById({ _id: id, deleted: false }, "-password")
             .populate([
                 { path: "added_by", select: "username" },
                 { path: "modified_by", select: "username" },
             ]);
+
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
 
         res.status(200).send(user);
     } catch (error) {
@@ -217,54 +228,7 @@ async function deleteUserController(req, res) {
     }
 }
 
-// Controller to change password
-async function changePasswordController(req, res) {
-    // Retrieve data from the request
-    const { currentPassword, newPassword: password } = req.body;
-    const addedBy = req.user.userId;
 
-    try {
-        // Check if data is valid
-        const { error } = passwordValidation({ password });
-        if (error) {
-            return res.status(400).json({ message: error.details[0].message });
-        }
-
-        const userToUpdate = await userModel.findById(addedBy);
-        if (!userToUpdate) {
-            return res.status(404).json({ message: "Utilisateur non trouvé." });
-        }
-
-        if (userToUpdate && userToUpdate._id.toString() !== addedBy) {
-            return res.status(404).json({ message: "Accès refusé!" });
-        }
-
-        // Compare the provided current password with the stored hashed password
-        const isCurrentPasswordValid = bcrypt.compareSync(currentPassword, userToUpdate.password);
-
-        if (!isCurrentPasswordValid) {
-            return res.status(400).json({
-                message: "Mot de passe actuel incorrect."
-            });
-        }
-
-        // Hash the password
-        const salt = bcrypt.genSaltSync(10);
-        const hashedPassword = bcrypt.hashSync(password, salt);
-
-        // Update the document to the database
-        await userToUpdate.updateOne({
-            password: hashedPassword,
-            added_by: addedBy,
-            modified_by: addedBy,
-        });
-
-        res.status(200).json({ message: "Mot de passe changé avec succès." });
-    } catch (error) {
-        console.error("Error changing password:", error);
-        res.status(500).json({ error: "Internal server error" });
-    }
-}
 
 module.exports = {
     addUserController,

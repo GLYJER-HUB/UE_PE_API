@@ -23,6 +23,20 @@ const options = {
         version: '1.0.0',
         description: 'This is a Classification API application made with Express and documented with swagger',
       },
+      components: {
+        securitySchemes: {
+          BearerAuth: {
+            type: 'http',
+            scheme: 'bearer',
+            bearerFormat: 'JWT',
+          },
+        },
+      },
+      security: [
+        {
+          BearerAuth: [],
+        },
+      ],
       servers: [
         {
           url: `http://localhost:${PORT}`,
@@ -35,7 +49,15 @@ const options = {
   const specs = swaggerJsdoc(options);  // Assurez-vous que cette ligne est présente
   
   // Utilisez Swagger UI à l'URL /api-docs
-  app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec, { explorer: true}));
+  app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec, { explorer: true, swaggerOptions: {
+    Plugins: [
+      {
+        'security': {
+          'BearerAuth': []
+        }
+      }
+    ]
+  }}));
   
 
 // Connect to the database

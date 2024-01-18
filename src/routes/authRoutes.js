@@ -70,4 +70,4 @@ router.post('/login', loginController);
  */
 router.post('/logout', verifyToken, logoutController);
 
-module.exports = router;
+module.exports = router;  

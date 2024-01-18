@@ -5,6 +5,11 @@
     "description": "This is a Classification API application made with Express and documented with Swagger",
     "version": "1.0"
   },
+  "security": [
+    {
+      "BearerAuth": []
+    }
+  ],
   "servers": [
     {
       "url": "http://localhost:3000",
@@ -45,7 +50,9 @@
                 "example": {
                   "userName": "john_doe",
                   "userId": 123456,
-                  "role": "user"
+                  "role": "user",
+                  "accessToken": "jwtoken",
+                  "success": true
                 }
               }
             }
@@ -83,7 +90,7 @@
           }
         }
       }
-    },   
+    },
     "/api/users": {
       "post": {
         "summary": "Add a new user",
@@ -843,9 +850,21 @@
         }
       }
     }
-  }
-},
+  },
   "components": {
+    "securitySchemes": {
+      "BearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT",
+        "example":"Bearer YOUR_JWT_TOKEN_HERE"
+      }
+    },
+    "globalSettings": {
+      "security": [
+        "BearerAuth"
+      ]
+    },
     "schemas": {
       "AddUser": {
         "type": "object",

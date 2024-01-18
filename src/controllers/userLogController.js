@@ -10,14 +10,14 @@ const addLogController = async (userId, loginTime, logoutTime) => {
       last_login: loginTime,
       last_logout: logoutTime,
     });
-
+    
     // Save the document to the database
-    await newUserLog.save();
-    return newUserLog._id;
-  } catch (error) {
-    console.error("Error adding UserLog:", error);
+        await newUserLog.save();
+        return newUserLog._id;
+    } catch (error) {
+        console.error('Error adding UserLog:', error);
+    }
   }
-};
 
 // Controller to update a userLog
 const updateLogController = async (logId, logoutTime) => {

@@ -4,7 +4,7 @@ const mongoose = require('mongoose');
 const userLogSchema = new mongoose.Schema({
     user_id: {
         type: mongoose.Schema.Types.ObjectId, ref: "User",
-        require: true
+        required: true
     },
 
     last_login: {
