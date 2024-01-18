@@ -69,6 +69,23 @@ const updateUserValidation = (data) => {
     return schema.validate(data);
 }
 
-module.exports.loginValidation = loginValidation;
-module.exports.addUserValidation = addUserValidation;
-module.exports.updateUserValidation = updateUserValidation;
+// Joi schema for validating the data when a user login
+const passwordValidation = (data) => {
+    const schema = Joi.object({
+        password: Joi.string().min(6).max(1024).required().messages({
+            'any.required': 'Le mot de passe est requis.',
+            'string.empty': 'Le mot de passe ne peut pas être vide.',
+            'string.min': 'Le mot de passe doit avoir au moins {#limit} caractères.',
+            'string.max': 'Le mot de passe ne peut pas dépasser {#limit} caractères.',
+        }),
+    });
+
+    return schema.validate(data);
+}
+
+module.exports = {
+    loginValidation,
+    addUserValidation,
+    updateUserValidation,
+    passwordValidation,
+};

@@ -6,7 +6,8 @@ const {
     getUserController,
     updateUserController,
     deleteUserController,
-    searchUsersController
+    searchUsersController,
+    changePasswordController
 } = require('../controllers/userController');
 const checkAdminOrSuperadmin = require('../middlewares/checkAdminOrSuperadmin');
 const checkUserRole = require('../middlewares/checkUserRole');
@@ -56,6 +57,14 @@ router.put(
     verifyToken,
     checkAdminOrSuperadmin,
     deleteUserController);
+
+
+// Endpoint to change password
+router.put(
+    '/change-password',
+    verifyToken,
+    checkUserRole,
+    changePasswordController);
 
 
 module.exports = router;

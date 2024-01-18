@@ -2,6 +2,7 @@ const userModel = require("../models/userModel");
 const {
     addUserValidation,
     updateUserValidation,
+    passwordValidation,
 } = require("../utils/userValidation");
 const bcrypt = require("bcryptjs");
 require("dotenv/config");
@@ -217,6 +218,46 @@ async function deleteUserController(req, res) {
     }
 }
 
+// Controller to change password
+async function changePasswordController(req, res) {
+    // Retrieve data from the request
+    const { password } = req.body;
+    const addedBy = req.user.userId;
+
+    try {
+        // Check if data is valid
+        const { error } = passwordValidation(req.body);
+        if (error) {
+            return res.status(400).json({ message: error.details[0].message });
+        }
+
+        let userToUpdate = await userModel.findById(addedBy);
+        if (!userToUpdate) {
+            return res.status(404).json({ message: "Utilisateur non trouvé." });
+        }
+
+        if (userToUpdate && userToUpdate._id !== addedBy) {
+            return res.status(404).json({ message: "Accès refusé!" });
+        }
+
+        // Hash the password
+        const salt = bcrypt.genSaltSync(10);
+        const hashedPassword = bcrypt.hashSync(password, salt);
+
+        // Update the document to the database
+        await userToUpdate.updateOne({
+            password: hashedPassword,
+            added_by: addedBy,
+            modified_by: addedBy,
+        });
+
+        res.status(200).json({ message: "Mot de passe modifié avec succès." });
+    } catch (error) {
+        console.error("Error updating user password:", error);
+        res.status(500).json({ error: "Internal server error" });
+    }
+}
+
 module.exports = {
     addUserController,
     getUsersController,
@@ -224,4 +265,5 @@ module.exports = {
     updateUserController,
     deleteUserController,
     searchUsersController,
+    changePasswordController,
 };
