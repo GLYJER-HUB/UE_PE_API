@@ -226,7 +226,7 @@ async function changePasswordController(req, res) {
 
     try {
         // Check if data is valid
-        const { error } = passwordValidation(password);
+        const { error } = passwordValidation({ password });
         if (error) {
             return res.status(400).json({ message: error.details[0].message });
         }
