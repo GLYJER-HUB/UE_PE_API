@@ -231,12 +231,12 @@ async function changePasswordController(req, res) {
             return res.status(400).json({ message: error.details[0].message });
         }
 
-        let userToUpdate = await userModel.findById(addedBy);
+        const userToUpdate = await userModel.findById(addedBy);
         if (!userToUpdate) {
             return res.status(404).json({ message: "Utilisateur non trouvé." });
         }
 
-        if (userToUpdate && userToUpdate._id !== addedBy) {
+        if (userToUpdate && userToUpdate._id.toString() !== addedBy) {
             return res.status(404).json({ message: "Accès refusé!" });
         }
 
@@ -251,9 +251,9 @@ async function changePasswordController(req, res) {
             modified_by: addedBy,
         });
 
-        res.status(200).json({ message: "Mot de passe modifié avec succès." });
+        res.status(200).json({ message: "Mot de passe changé avec succès." });
     } catch (error) {
-        console.error("Error updating user password:", error);
+        console.error("Error changing password:", error);
         res.status(500).json({ error: "Internal server error" });
     }
 }

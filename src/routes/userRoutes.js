@@ -45,7 +45,7 @@ router.get(
 
 // Endpoint to update a user
 router.put(
-    '/:id',
+    '/update/:id',
     verifyToken,
     checkAdminOrSuperadmin,
     updateUserController);
