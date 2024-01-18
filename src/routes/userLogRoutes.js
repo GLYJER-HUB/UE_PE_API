@@ -1,3 +1,4 @@
+
 /**
  * @swagger
  * tags:
@@ -5,12 +6,14 @@
  *   description: Endpoints for user log management
  */
 
-const router = require('express').Router();
-const verifyToken = require('../middlewares/jwtVerification');
+
+const router = require("express").Router();
+const verifyToken = require("../middlewares/jwtVerification");
 const {
-    addLogController,
-    updateLogController
-} = require('../controllers/userLogController');
+  addLogController,
+  updateLogController,
+} = require("../controllers/userLogController");
+
 
 // Endpoint to add a log
 /**
@@ -95,5 +98,8 @@ router.post('/', verifyToken, addLogController);
  *         description: Internal server error
  */
 router.put('/:id', verifyToken, updateLogController);
+
+// Endpoint to update a log
+router.put("/:id", verifyToken, updateLogController);
 
 module.exports = router;

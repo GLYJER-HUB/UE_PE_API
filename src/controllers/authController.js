@@ -24,11 +24,11 @@ async function loginController(req, res) {
             username: username,
             deleted: false
         });
-        if (!user) return res.status(401).json({ message: "Invalid username or password" });
+        if (!user) return res.status(401).json({ message: "Nom d'utilisateur ou mot de passe invalide." });
 
         // Compare the provided password with the stored hashed password
         const passwordMatch = bcrypt.compareSync(password, user.password);
-        if (!passwordMatch) return res.status(401).json({ message: "Invalid username or password" });
+        if (!passwordMatch) return res.status(401).json({ message: "Nom d'utilisateur ou mot de passe invalide." });
 
         // Log the user login
         const loginTime = new Date();
@@ -67,7 +67,7 @@ async function logoutController(req, res) {
 
         // Check if the token is empty
         if (!jwtToken) {
-            return res.status(401).json({ message: 'Access denied: No token provided' });
+            return res.status(401).json({ message: 'Accès refusé : Aucun jeton fourni.' });
         }
 
         // Update log
@@ -76,7 +76,7 @@ async function logoutController(req, res) {
 
         res.clearCookie('jwtToken');
         res.status(205);
-        res.json({ message: 'Logout successful' });
+        res.json({ message: 'Déconnexion réussie.' });
     } catch (error) {
         console.error('Error logout:', error);
         res.status(500).json({ message: 'Internal server error' });

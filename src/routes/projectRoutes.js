@@ -163,6 +163,7 @@ router.post(
     addProjectController
 );
 
+
 /**
  * @swagger
  * api/projects:
@@ -183,7 +184,6 @@ router.post(
  *             example:
  *               error: Internal server error
  */
-
 router.get(
     '/projects',
     cache('1 minutes'),
@@ -217,7 +217,6 @@ router.get(
  *             example:
  *               error: Internal server error
  */
-
 router.get(
     '/projects/discipline/{discipline}',
     cache('1 minutes'),
@@ -251,7 +250,6 @@ router.get(
  *             example:
  *               error: Internal server error
  */
-
 router.get(
     '/projects/type/{type}',
     cache('1 minutes'),
@@ -291,7 +289,6 @@ router.get(
  *             example:
  *               error: Internal server error
  */
-
 router.get(
     '/projects/discipline/{discipline}/type/{type}',
     cache('1 minutes'),
@@ -325,7 +322,6 @@ router.get(
  *             example:
  *               error: Internal server error
  */
-
 router.get(
     '/projects/search',
     cache('1 minute'),
@@ -370,7 +366,6 @@ router.get(
  *             example:
  *               error: Internal server error
  */
-
 router.get('/projects/id/{id}', getProjectByIdController);
 
 /**
@@ -427,7 +422,6 @@ router.get('/projects/id/{id}', getProjectByIdController);
  *             example:
  *               error: Internal server error
  */
-
 router.put(
     '/projects/{id}',
     verifyToken,
@@ -471,7 +465,6 @@ router.put(
  *             example:
  *               error: Internal server error
  */
-
 router.put(
     '/projects/delete/{id}',
     verifyToken,

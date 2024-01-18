@@ -15,7 +15,6 @@ const swaggerSpec = require('./swagger.json');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
-
 const options = {
     definition: {
       openapi: '3.1.0',
@@ -41,17 +40,17 @@ const options = {
 
 // Connect to the database
 const connectDB = async () => {
-    try {
-        await mongoose.connect(process.env.MONGO_URI);
-        console.log('Connected to database');
+  try {
+    await mongoose.connect(process.env.MONGO_URI);
+    console.log("Connected to database");
 
-        // Create default admin and superadmin users if they don't exist
-        await createDefaultUsers();
-    } catch (error) {
-        console.log(error);
-        process.exit(1);
-    }
-}
+    // Create default admin and superadmin users if they don't exist
+    await createDefaultUsers();
+  } catch (error) {
+    console.log(error);
+    process.exit(1);
+  }
+};
 
 // Middlewares
 app.use(express.json());
@@ -64,13 +63,13 @@ app.use(cors({
         "*"
     ]
 }));
-app.use('/uploads', express.static(__dirname + '/uploads'));
+app.use("/files", express.static(__dirname + "/../uploads"));
 
 // Routes
-app.use('/api/auth', authRoutes);
-app.use('/api/users', userRoutes);
-app.use('/api/logs', userLogRoutes);
-app.use('/api/projects', projectRoutes);
+app.use("/api/auth", authRoutes);
+app.use("/api/users", userRoutes);
+app.use("/api/logs", userLogRoutes);
+app.use("/api/projects", projectRoutes);
 
 //sitemap.swaggerJSDoc('UE_PE_API',authRoutes);
 //sitemap.swagger('UE_PE_API - Documentation', app);
