@@ -221,12 +221,12 @@ async function deleteUserController(req, res) {
 // Controller to change password
 async function changePasswordController(req, res) {
     // Retrieve data from the request
-    const { password } = req.body;
+    const { currentPassword, newPassword: password } = req.body;
     const addedBy = req.user.userId;
 
     try {
         // Check if data is valid
-        const { error } = passwordValidation(req.body);
+        const { error } = passwordValidation(password);
         if (error) {
             return res.status(400).json({ message: error.details[0].message });
         }
@@ -238,6 +238,15 @@ async function changePasswordController(req, res) {
 
         if (userToUpdate && userToUpdate._id.toString() !== addedBy) {
             return res.status(404).json({ message: "Accès refusé!" });
+        }
+
+        // Compare the provided current password with the stored hashed password
+        const isCurrentPasswordValid = bcrypt.compareSync(currentPassword, userToUpdate.password);
+
+        if (!isCurrentPasswordValid) {
+            return res.status(400).json({
+                message: "Mot de passe actuel incorrect."
+            });
         }
 
         // Hash the password
