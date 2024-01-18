@@ -129,12 +129,27 @@ async function updateUserController(req, res) {
             return res.status(400).json({ message: error.details[0].message });
 
         // Check if the username is already taken
+        let existingUser = null;
         if (username) {
-            const existingUser = await userModel.findOne({ username: username });
+            existingUser = await userModel.findOne({ username: username });
             if (existingUser && existingUser.username !== username)
                 return res.status(400).json({
                     message: "Username already Nom d'utilisateur déjà existant.",
                 });
+        }
+
+        if ((existingUser?.role || role) === "admin" && req.user.role !== "superadmin") {
+            return res.status(404).json({
+                message:
+                    "Accès refusé ! Impossible de modifier un utilisateur administrateur.",
+            });
+        }
+
+        if ((existingUser?.role || role) === "superadmin") {
+            return res.status(404).json({
+                message:
+                    "Accès refusé ! Impossible de modifier le superadministrateur.",
+            });
         }
 
         // Hash the password
@@ -163,7 +178,7 @@ async function updateUserController(req, res) {
 
         res.status(200).json({ message: "Utilisateur mis à jour avec succès." });
     } catch (error) {
-        console.error("Error creating user:", error);
+        console.error("Error updating user:", error);
         res.status(500).json({ error: "Internal server error" });
     }
 }
