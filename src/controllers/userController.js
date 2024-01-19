@@ -32,7 +32,6 @@ async function addUserController(req, res) {
 
         // Create a new user document
         const newUser = new userModel({
-            _id: uuidv4(),
             username: username,
             password: hashedPassword,
             role: role,

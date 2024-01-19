@@ -4,10 +4,6 @@ const roleEnum = ['admin', 'member', 'superadmin',];
 
 // Create the user schema
 const userSchema = new mongoose.Schema({
-    _id: {
-        type: String,
-        default: () => uuidv4()
-    },
     username: {
         type: String,
         required: true,
@@ -35,13 +31,11 @@ const userSchema = new mongoose.Schema({
     },
 
     added_by: {
-        type: mongoose.Schema.Types.ObjectId, ref: "User",
-        default: null
+        type: mongoose.Schema.Types.ObjectId, ref: "User"
     },
 
     modified_by: {
-        type: mongoose.Schema.Types.ObjectId, ref: "User",
-        default: null
+        type: mongoose.Schema.Types.ObjectId, ref: "User"
     }
 }, {
     timestamps: true,

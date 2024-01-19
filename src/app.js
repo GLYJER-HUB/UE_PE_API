@@ -49,15 +49,7 @@ const options = {
   const specs = swaggerJsdoc(options);  // Assurez-vous que cette ligne est présente
   
   // Utilisez Swagger UI à l'URL /api-docs
-  app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec, { explorer: true, swaggerOptions: {
-    Plugins: [
-      {
-        'security': {
-          'BearerAuth': []
-        }
-      }
-    ]
-  }}));
+  app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec, { explorer: true}));
   
 
 // Connect to the database

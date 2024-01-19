@@ -41,7 +41,7 @@ const verifyToken = require('../middlewares/jwtVerification');
  *           application/json:
  *             example:
  *               userName: john_doe
- *               userId: 123456
+ *               userId: 27623335817a439e98b61f66
  *               role: user
  *       400:
  *         description: Bad request (e.g., missing required fields or invalid data)
