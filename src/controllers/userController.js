@@ -159,14 +159,14 @@ async function updateUserController(req, res) {
             return res.status(404).json({ message: "Utilisateur non trouvé." });
         }
 
-        if (userToUpdate.role === "admin" && (req.user.role !== "superadmin" || userToUpdate._id.toJSON() !== addedBy)) {
+        if (userToUpdate.role === "admin" && (req.user.role !== "superadmin" || userToUpdate._id.toString() !== addedBy)) {
             return res.status(404).json({
                 message:
                     "Accès refusé ! Impossible de modifier un utilisateur administrateur.",
             });
         }
 
-        if (userToUpdate.role === "superadmin" && userToUpdate._id.toJSON() !== addedBy) {
+        if (userToUpdate.role === "superadmin" && userToUpdate._id.toString() !== addedBy) {
             return res.status(404).json({
                 message:
                     "Accès refusé ! Impossible de modifier le superadministrateur.",
