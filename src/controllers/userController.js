@@ -4,8 +4,10 @@ const {
     updateUserValidation
 } = require("../utils/userValidation");
 const bcrypt = require("bcryptjs");
-const { v4: uuidv4 } = require('uuid');
+const verifyToken = require("../middlewares/jwtVerification");
 require('dotenv/config');
+
+let userIdAdded = null;
 
 // Controller to add a new user
 async function addUserController(req, res) {
@@ -41,6 +43,9 @@ async function addUserController(req, res) {
 
         // Save the document to the database
         await newUser.save();
+        
+        // Save the id generate in a variable
+        userIdAdded = newUser._id;
 
         res.status(201).json({ message: "Utilisateur créé avec succès." });
     } catch (error) {
@@ -99,30 +104,46 @@ async function searchUsersController(req, res) {
 // Controller to get a user by _id
 async function getUserController(req, res) {
     // Retrieve the id from the request params
-    const { id } = req.params;
+   const user_id = userIdAdded || req.params.id;
 
     try {
         // Validate that the ID is a valid GUID
-        if (!uuidv4(id)) {
+        if (!user_id) {
             return res.status(400).json({ message: 'Invalid ID format. Must be a valid GUID.'});
         }
 
-        const user = await userModel
-            .findById({ _id: id, deleted: false }, "-password")
+        verifyToken(req, res, async () => {
+            try {
+                // Search the User by user_id
+                const user = await userModel
+            .findById({ _id: user_id, deleted: false }, "-password")
             .populate([
                 { path: "added_by", select: "username" },
                 { path: "modified_by", select: "username" },
             ]);
 
+            
         if (!user) {
             return res.status(404).json({ message: 'User not found' });
         }
 
+        // Use the same attribut (userId) then in the addUserController
+        req.user = { userId: user_id };
+
+        
         res.status(200).send(user);
     } catch (error) {
         console.error("Error getting the user:", error);
         res.status(500).json({ error: "Internal server error" });
     }
+
+    });
+
+} catch (error) {
+    console.log("Error validationg user_id", error);
+    res.status(400).json({ error: "Invalid user_id format. Must be a valid GUID."});
+}
+
 }
 
 // Controller to update a user

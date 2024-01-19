@@ -959,8 +959,7 @@
         "required": true,
         "description": "The unique identifier of the user",
         "schema": {
-          "type": "string",
-          "format": "uuid"
+          "type": "string"
         }
       },
       "UserSearchQuery": {
