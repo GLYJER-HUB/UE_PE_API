@@ -159,7 +159,12 @@ async function updateUserController(req, res) {
             return res.status(404).json({ message: "Utilisateur non trouvé." });
         }
 
-        if (userToUpdate.role === "admin" && (req.user.role !== "superadmin" || userToUpdate._id.toString() !== addedBy)) {
+        if (role === "superadmin" && req.user.role !== "superadmin")
+            return res.status(404).json({
+                message: "Accès refusé. Privilèges de superadmin requis.",
+            });
+
+        if (userToUpdate.role === "admin" && req.user.role !== "superadmin" && userToUpdate._id.toString() !== addedBy) {
             return res.status(404).json({
                 message:
                     "Accès refusé ! Impossible de modifier un utilisateur administrateur.",
