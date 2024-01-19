@@ -166,7 +166,7 @@ async function updateUserController(req, res) {
             });
         }
 
-        if (userToUpdate.role === "superadmin" && userToUpdate._id.toString() !== addedBy) {
+        if (userToUpdate.role === "superadmin" && req.user.role !== "superadmin") {
             return res.status(404).json({
                 message:
                     "Accès refusé ! Impossible de modifier le superadministrateur.",
@@ -209,7 +209,7 @@ async function deleteUserController(req, res) {
             });
         }
 
-        if (userToDelete.role === "superadmin") {
+        if (userToDelete.role === "superadmin" && req.user.role !== "superadmin") {
             return res.status(404).json({
                 message:
                     "Accès refusé ! Impossible de supprimer le superadministrateur.",
