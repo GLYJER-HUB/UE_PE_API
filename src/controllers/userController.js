@@ -19,6 +19,11 @@ async function addUserController(req, res) {
         if (error)
             return res.status(400).json({ message: error.details[0].message });
 
+        if (role === "superadmin" && req.user.role !== "superadmin")
+            return res
+                .status(400)
+                .json({ message: "Accès refusé ! Impossible d'ajouter le superadministrateur." });
+
         // Check if the username is already taken
         const existingUser = await userModel.findOne({ username: username });
         if (existingUser)
@@ -139,20 +144,6 @@ async function updateUserController(req, res) {
                 });
         }
 
-        if ((existingUser?.role || role) === "admin" && req.user.role !== "superadmin") {
-            return res.status(404).json({
-                message:
-                    "Accès refusé ! Impossible de modifier un utilisateur administrateur.",
-            });
-        }
-
-        if ((existingUser?.role || role) === "superadmin") {
-            return res.status(404).json({
-                message:
-                    "Accès refusé ! Impossible de modifier le superadministrateur.",
-            });
-        }
-
         // Hash the password
         let hashedPassword = null;
         if (password) {
@@ -167,6 +158,21 @@ async function updateUserController(req, res) {
         if (!userToUpdate) {
             return res.status(404).json({ message: "Utilisateur non trouvé." });
         }
+
+        if (userToUpdate.role === "admin" && (req.user.role !== "superadmin" || userToUpdate._id.toJSON() !== addedBy)) {
+            return res.status(404).json({
+                message:
+                    "Accès refusé ! Impossible de modifier un utilisateur administrateur.",
+            });
+        }
+
+        if (userToUpdate.role === "superadmin" && userToUpdate._id.toJSON() !== addedBy) {
+            return res.status(404).json({
+                message:
+                    "Accès refusé ! Impossible de modifier le superadministrateur.",
+            });
+        }
+
 
         // Update the document to the database
         await userToUpdate.updateOne({
