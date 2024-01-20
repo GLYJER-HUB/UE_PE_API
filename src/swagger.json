@@ -314,16 +314,14 @@
         "summary": "Add a new project",
         "tags": ["Projects"],
         "security": [
-          {
-            "bearerAuth": []
-          }
+          {"BearerAuth": []}
         ],
         "requestBody": {
           "required": true,
           "content": {
-            "multipart/form-data": {
+            "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/Project"
+                "$ref": "#/components/schemas/AddProject"
               }
             }
           }
@@ -353,6 +351,36 @@
               "application/json": {
                 "example": {
                   "message": "Validation error details"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Access denied. Token not provided or invalid.",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Access denied: No token provided"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Access denied. Insufficient permissions.",
+            "content": {
+              "application/json": {
+                "example": {
+                  "message": "Access denied: Unauthorized role"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "example": {
+                  "error": "Internal server error"
                 }
               }
             }
@@ -950,6 +978,39 @@
             "enum": ["admin", "member", "superadmin"]
           }
         }
+      },
+      "AddProject": {
+        "type": "object",
+        "properties": {
+          "projectName": {
+            "type": "string",
+            "description": "The name of the project"
+          },
+          "description": {
+            "type": "string",
+            "description": "The description of the project"
+          },
+          "discipline": {
+            "type": "string",
+            "description": "The discipline of the project"
+          },
+          "type": {
+            "type": "string",
+            "description": "The type of the project"
+          },
+          "authors": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "An array of authors contributing to the project"
+          },
+          "yearOfSubmission": {
+            "type": "integer",
+            "description": "The year of project submission"
+          }
+        },
+        "required": ["projectName", "description","discipline", "type", "authors", "yearOfSubmission"]
       }
     },
     "parameters": {
@@ -967,6 +1028,15 @@
         "in": "query",
         "required": false,
         "description": "The search query for username or role",
+        "schema": {
+          "type": "string"
+        }
+      },
+      "ProjectSearchQuery": {
+        "name": "query",
+        "in": "query",
+        "required": false,
+        "description": "The search query for project name, discipline, type, or author",
         "schema": {
           "type": "string"
         }

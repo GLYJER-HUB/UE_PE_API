@@ -121,42 +121,83 @@ const upload = multer({
 
 /**
  * @swagger
- * api/projects:
+ * /api/projects:
  *   post:
  *     summary: Add a new project
  *     tags: [Projects]
  *     security:
- *       - bearerAuth: []
+ *       - BearerAuth: []
  *     requestBody:
  *       required: true
  *       content:
  *         multipart/form-data:
  *           schema:
- *             $ref: '#/components/schemas/Project'
+ *             type: object
+ *             properties:
+ *               projectName:
+ *                 type: string
+ *               description:
+ *                 type: string
+ *               discipline:
+ *                 type: string
+ *               type:
+ *                 type: string
+ *               projectUrl:
+ *                 type: string
+ *               authors:
+ *                 type: array
+ *                 items:
+ *                   type: string
+ *               yearOfSubmission:
+ *                 type: integer
+ *             required:
+ *               - projectName
+ *               - description
+ *               - discipline
+ *               - type
+ *               - authors
+ *               - yearOfSubmission
  *     responses:
  *       201:
  *         description: Project created successfully
  *         content:
  *           application/json:
  *             example:
- *               message: Project created successfully
+ *               message: Projet créé avec succès
  *               project:
- *                 projectName: My Project
- *                 description: This is a sample project
- *                 discipline: Computer Science
- *                 type: Web application
- *                 authors: ["Author1", "Author2"]
+ *                 projectName: Mon Projet
+ *                 description: Ceci est un projet exemple
+ *                 discipline: Informatique
+ *                 type: Application web
+ *                 authors: ["Auteur1", "Auteur2"]
  *                 yearOfSubmission: 2022
  *       400:
  *         description: Bad request. Validation error.
  *         content:
  *           application/json:
  *             example:
- *               message: Validation error details
+ *               message: Détails de l'erreur de validation
+ *       401:
+ *         description: Access denied. Token not provided or invalid.
+ *         content:
+ *           application/json:
+ *             example:
+ *               message: Accès refusé: Aucun jeton fourni
+ *       403:
+ *         description: Access denied. Insufficient permissions.
+ *         content:
+ *           application/json:
+ *             example:
+ *               message: Accès refusé: Rôle non autorisé
+ *       500:
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             example:
+ *               error: Erreur interne du serveur
  */
-
 router.post(
-    '/projects',
+    '/',
     verifyToken,
     checkAdminOrMember,
     upload,
@@ -185,7 +226,7 @@ router.post(
  *               error: Internal server error
  */
 router.get(
-    '/projects',
+    '/',
     cache('1 minutes'),
     getProjectsController
 );
