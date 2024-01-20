@@ -35,6 +35,7 @@ app.use(cors({
     credentials: true, origin: [
         "http://localhost:3000",
         "http://localhost:5173",
+        "https://ue-project-explorer.vercel.app",
         "*"
     ]
 }));
