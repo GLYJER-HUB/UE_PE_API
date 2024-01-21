@@ -4,26 +4,21 @@ const bcrypt = require('bcryptjs');
 // Function to create default admin and superadmin users
 const createDefaultUsers = async () => {
     try {
-        const adminUser = await User.findOne({ role: 'admin' });
         const superadminUser = await User.findOne({ role: 'superadmin' });
+
+        const defaultSuperAdmin = {
+          username: "superadmin",
+          password: "Jesus123!", 
+        };
 
         // Hash the password 
         const salt = bcrypt.genSaltSync(10);
-        const hashedPassword = bcrypt.hashSync("Jesus123!", salt)
-
-        if (!adminUser) {
-            // Create admin user
-            await User.create({
-                username: 'admin',
-                password: hashedPassword,
-                role: 'admin',
-            });
-        }
+        const hashedPassword = bcrypt.hashSync(defaultSuperAdmin.password, salt)
 
         if (!superadminUser) {
             // Create superadmin user
             await User.create({
-                username: 'superadmin',
+                username: defaultSuperAdmin.username',
                 password: hashedPassword,
                 role: 'superadmin',
             });
