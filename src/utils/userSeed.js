@@ -18,7 +18,7 @@ const createDefaultUsers = async () => {
         if (!superadminUser) {
             // Create superadmin user
             await User.create({
-                username: defaultSuperAdmin.username',
+                username: defaultSuperAdmin.username,
                 password: hashedPassword,
                 role: 'superadmin',
             });
