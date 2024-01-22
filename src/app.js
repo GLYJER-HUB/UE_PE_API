@@ -33,10 +33,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(cors({
     credentials: true, origin: [
-        "http://localhost:3000",
-        "http://localhost:5173",
-        "https://ue-project-explorer.vercel.app",
-        "*"
+        "https://www.euexample.app",
     ]
 }));
 app.use("/files", express.static(__dirname + "/../uploads"));
